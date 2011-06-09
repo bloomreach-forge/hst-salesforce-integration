@@ -2,9 +2,9 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <name>hst-salesforce</name>
+  <name>SalesForce Integration Components</name>
   <groupId>org.onehippo.forge</groupId>
-  <artifactId>hst-salesforce</artifactId>
+  <artifactId>sforce-comps</artifactId>
   <version>0.01.00-SNAPSHOT</version>
   <packaging>jar</packaging>
 
