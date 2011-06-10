@@ -13,10 +13,10 @@
   "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
   <properties>
-    <title>How to use HST SalesForce Components</title>
+    <title>How to use SalesForce Integration Components</title>
   </properties>
   <body>
-    <section name="How to use HST SalesForce Components">
+    <section name="How to use SalesForce Integration Components">
       <subsection name="Prerequisites">
         <p>
           These instruction assumes that you have maven 2 or 3 based build for your site.
@@ -32,7 +32,12 @@
     </repository>]]></source>
       </subsection>
       <subsection name="Adding Dependencies to your project">
-        TODO
+        <source><![CDATA[
+    <dependency>
+      <groupId>org.onehippo.forge</groupId>
+      <artifactId>sforce-comps</artifactId>
+      <version>${sforce-comps.version}</version>
+    </dependency>]]></source>
       </subsection>
     </section>
   </body>

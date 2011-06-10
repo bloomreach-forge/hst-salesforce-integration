@@ -17,15 +17,37 @@
   </properties>
   <body>
     <section name="Introduction">
-      <subsection name="What is HST SalesForce Components?">
+      <subsection name="What is SalesForce Integration Components?">
         <p>
-          TODO
+          The SalesForce Integration Components provides POJO based components
+          which enables easy integration with SalesForce via REST API.
         </p>
+        <p>
+          So, you can make use of these POJO based components in your application
+          in various ways.
+          For example, you can use those directly in your Java codes,
+          or you can take advantage of components assembly with Spring Framework,
+          Apache Camel, etc.
+        </p>
+      </subsection>
+      <subsection name="Component List">
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>FQN</th>
+          </tr>
+          <tr>
+            <td>SalesForceRestClient</td>
+            <td>A SalesForce REST Client API Wrapper class</td>
+            <td>org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient</td>
+          </tr>
+        </table>
       </subsection>
     </section>
     <section name="Project status">
       <p>
-        The latest version of the EasyForms Camel Support Components is 0.01.00.
+        The latest version of the SalesForce Integration Components is 0.01.00.
       </p>
       <p>
         See the

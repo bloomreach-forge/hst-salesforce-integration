@@ -23,7 +23,7 @@
       <subsection name="Requirements">
         <ul>
           <li>
-            <p>Java 5 JDK</p>
+            <p>Java 6 JDK</p>
           </li>
           <li>
             <p>Maven 2 or 3</p>
@@ -37,7 +37,7 @@
         <p>
           Check out the trunk source code from the SVN repository:
         </p>
-        <source>svn co http://forge.onehippo.org/svn/hst-salesforce/hst-salesforce/trunk hst-salesforce</source>
+        <source>svn co https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/trunk sforce-comps</source>
         <p>
           Build the project using Maven:
         </p>

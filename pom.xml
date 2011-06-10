@@ -18,6 +18,7 @@
     
     <httpcomponents-httpcore.version>4.1.1</httpcomponents-httpcore.version>
     <httpcomponents-httpclient.version>4.1.1</httpcomponents-httpclient.version>
+    <json-lib.version>2.4</json-lib.version>
     
     <lib.slf4j.version>1.6.1</lib.slf4j.version>
     <lib.log4j.version>1.2.16</lib.log4j.version>
@@ -71,9 +72,9 @@
   </developers>
   
   <scm>
-    <connection>scm:svn:https://forge.onehippo.org/svn/hst-salesforce/hst-salesforce/trunk</connection>
-    <developerConnection>scm:svn:https://forge.onehippo.org/svn/hst-salesforce/hst-salesforce/trunk</developerConnection>
-    <url>https://forge.onehippo.org/svn/hst-salesforce/hst-salesforce/trunk</url>
+    <connection>scm:svn:https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/trunk</connection>
+    <developerConnection>scm:svn:https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/trunk</developerConnection>
+    <url>https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/trunk</url>
   </scm>
 
   <issueManagement>
@@ -159,6 +160,25 @@
       <version>${lib.slf4j.version}</version>
     </dependency>
     
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${lib.slf4j.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>net.sf.json-lib</groupId>
+      <artifactId>json-lib</artifactId>
+      <version>${json-lib.version}</version>
+      <classifier>jdk15</classifier>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
     <!-- TEST DEPENDENCIES -->
 
     <dependency>
@@ -168,13 +188,6 @@
       <scope>test</scope>
     </dependency>
   
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <version>${lib.slf4j.version}</version>
-      <scope>test</scope>
-    </dependency>
-    
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>

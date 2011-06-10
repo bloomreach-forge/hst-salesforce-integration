@@ -28,6 +28,7 @@
 
     <menu name="Usage">
       <item name="Installation" href="install.html" />
+      <item name="Getting Started" href="gettingstarted.html" />
       <item name="Build from source" href="build-from-source.html" />
     </menu>
 

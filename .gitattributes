@@ -1,9 +1,11 @@
 * text=auto !eol
 /pom.xml -text
 src/main/java/com/onehippo/salesforce/BaseSalesforceFormHstComponent.java -text
+src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestClient.java -text
 src/site/checkstyle.xml -text svneol=unset#text/plain
 src/site/site.xml -text svneol=unset#text/plain
 src/site/xdoc/build-from-source.xml -text svneol=unset#text/plain
+src/site/xdoc/gettingstarted.xml -text svneol=unset#text/plain
 src/site/xdoc/index.xml -text svneol=unset#text/plain
 src/site/xdoc/install.xml -text svneol=unset#text/plain
 src/site/xdoc/release-notes.xml -text svneol=unset#text/plain

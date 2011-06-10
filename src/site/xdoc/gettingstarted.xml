@@ -13,14 +13,14 @@
   "http://maven.apache.org/dtd/xdoc_1_0.dtd">
 <document>
   <properties>
-    <title>Release Notes</title>
+    <title>Getting Started</title>
   </properties>
   <body>
-    <section name="Release Notes">
-      <subsection name="0.01.00">
-        <ul>
-          <li>Initial release.</li>
-        </ul>
+    <section name="Getting Started">
+      <subsection name="Example with Simple Java Codes">
+        <p>
+          TODO
+        </p>
       </subsection>
     </section>
   </body>
