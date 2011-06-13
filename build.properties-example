@@ -1,0 +1,32 @@
+#
+#  Copyright 2011 Hippo
+#
+#  Licensed under the Apache License, Version 2.0 (the  "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS"
+#  BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+
+#
+# How to have the following keys:
+# 
+# 1. Sign up at a SalesForce developer site (e.g., https://na1.salesforce.com/)
+# 2. Log on the SalesForce developer site. (e.g., https://na1.salesforce.com/)
+# 3. In SetUp page, navigate to Develop / Manage your remote access; you can create clientId and clientSecret.
+# 4. In SetUp page, navigate to Reset your security token; you can create a security token.
+# 
+# Also see http://www.salesforce.com/us/developer/docs/api_rest/index.htm
+# 
+
+salesforce.clientId = 3MVG9lKcPoNINVBJSoQsNCD.HHDdbugPsNXwwyFbgb47KWa_PTv
+salesforce.clientSecret = 5678471853609579508
+salesforce.username = tester@onehippo.org
+salesforce.password = password
+salesforce.securityToken = hhWVl82SHphnA50OTBt2DAZk
