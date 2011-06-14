@@ -345,6 +345,23 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>org.onehippo.forge.sforcecomps.client.rest.SalesForceRestBrowser</mainClass>
+        </configuration>
+        <dependencies>
+        </dependencies>
+      </plugin>
     </plugins>
 
     <extensions>
