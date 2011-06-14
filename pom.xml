@@ -242,7 +242,7 @@
           <xmlOutput>true</xmlOutput>
           <xdocsOutput>true</xdocsOutput>
           <xmlOutputDirectory>target/site</xmlOutputDirectory>
-          <onlyAnalyze>org.onehippo.forge.easyforms.camel.*</onlyAnalyze>
+          <onlyAnalyze>org.onehippo.forge.sforcecomps.client.*</onlyAnalyze>
           <effort>Max</effort>
           <threshold>High</threshold>
           <relaxed>true</relaxed>
@@ -328,7 +328,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>${plugin.release.version}</version>
         <configuration>
-          <tagBase>https://forge.onehippo.org/svn/easyforms-camel/easyforms-camel/tags</tagBase>
+          <tagBase>https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/tags</tagBase>
         </configuration>
       </plugin>
       <plugin>
