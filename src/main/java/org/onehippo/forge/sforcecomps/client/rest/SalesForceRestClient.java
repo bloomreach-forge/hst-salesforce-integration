@@ -212,7 +212,7 @@ public class SalesForceRestClient {
      * @see http://www.salesforce.com/us/developer/docs/api_rest/index.htm
      */
     public JSONObject getObjectsFromResourcePath(String resourcePath) throws IOException {
-        return getJSONObjectFromURL(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/") + "/");
+        return getJSONObjectFromURL(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/"));
     }
     
     /**

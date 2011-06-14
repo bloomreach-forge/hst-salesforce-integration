@@ -126,6 +126,13 @@ public class SalesForceTasksTest {
         json = "{ \"id\": \"" + id + "\" }";
         deleter.deleteRecord(json);
     }
+    
+    @Test
+    public void testSOQL() throws Exception {
+        retriever.setBaseResourcePath(null);
+        String ret = retriever.retrieveRecord("/query/?q=SELECT+name+from+Account");
+        log.info("Query result: " + ret);
+    }
 
     private boolean checkSalesForcePropertiesConfigured() {
         if (connectionInfo == null) {
