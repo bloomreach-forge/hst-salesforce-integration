@@ -22,7 +22,7 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient;
 
-public class SalesForceRecordUpdater {
+public class SalesForceRecordDeleter {
 
     private SalesForceRestClient client;
     private String baseResourcePath;
@@ -43,11 +43,9 @@ public class SalesForceRecordUpdater {
         this.baseResourcePath = baseResourcePath;
     }
 
-    public String updateRecord(String json) throws IOException {
+    public String deleteRecord(String json) throws IOException {
         JSONObject jsonObject = JSONObject.fromObject(json);
-        String id = jsonObject.getString("id");
-        jsonObject.remove("id");
-        client.updateRecord(StringUtils.removeEnd(baseResourcePath, "/") + "/" + id + "/", jsonObject);
+        client.deleteRecord(StringUtils.removeEnd(baseResourcePath, "/") + "/" + jsonObject.getString("id") + "/");
         return json;
     }
 

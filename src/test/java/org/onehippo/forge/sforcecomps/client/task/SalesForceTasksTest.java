@@ -13,32 +13,37 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.onehippo.forge.sforcecomps.client.rest;
+package org.onehippo.forge.sforcecomps.client.task;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.onehippo.forge.sforcecomps.client.rest.SalesForceConnectionInfo;
+import org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SalesForceRestClientTest {
+public class SalesForceTasksTest {
     
-    private static Logger log = LoggerFactory.getLogger(SalesForceRestClientTest.class);
+    private static Logger log = LoggerFactory.getLogger(SalesForceTasksTest.class);
     
     private SalesForceConnectionInfo connectionInfo;
     private SalesForceRestClient client;
+    
+    private SalesForceRecordRetriever retriever;
+    private SalesForceRecordCreator creator;
+    private SalesForceRecordUpdater updater;
+    private SalesForceRecordDeleter deleter;    
     
     @Before
     public void setUp() throws Exception {
@@ -85,6 +90,19 @@ public class SalesForceRestClientTest {
         
         assertFalse(StringUtils.isBlank(client.getAuthInfo().getAccessToken()));
         assertTrue(client.getAuthInfo().getIssuedAt() > 0L);
+        
+        retriever = new SalesForceRecordRetriever();
+        retriever.setClient(client);
+        retriever.setBaseResourcePath("/sobjects/Account");
+        creator = new SalesForceRecordCreator();
+        creator.setClient(client);
+        creator.setBaseResourcePath("/sobjects/Account");
+        updater = new SalesForceRecordUpdater();
+        updater.setClient(client);
+        updater.setBaseResourcePath("/sobjects/Account");
+        deleter = new SalesForceRecordDeleter();
+        deleter.setClient(client);
+        deleter.setBaseResourcePath("/sobjects/Account");
     }
     
     @After
@@ -93,73 +111,22 @@ public class SalesForceRestClientTest {
             return;
         }
     }
-
-    @Test
-    public void testGetAvailableVersions() throws Exception {
-        if (!checkSalesForcePropertiesConfigured()) {
-            return;
-        }
-
-        JSONArray jsonArray = client.getAvailableVersions();
-        log.info("Available Versions: " + jsonArray);
-        assertTrue(jsonArray.size() > 0);
-        JSONObject jsonObject = jsonArray.getJSONObject(0);
-        assertNotNull(jsonObject);
-    }
     
     @Test
-    public void testGetAvailableResources() throws Exception {
-        if (!checkSalesForcePropertiesConfigured()) {
-            return;
-        }
-
-        JSONObject jsonObject = client.getAvailableResources();
-        log.info("Available Resources: " + jsonObject);
+    public void testTasks() throws Exception {
+        String json = "{ \"Name\": \"test\" }";
+        String ret = creator.createRecord(json);
+        log.info("Created: " + ret);
+        JSONObject jsonRet = JSONObject.fromObject(ret);
+        String id = jsonRet.getString("id");
+        json = "{ \"id\": \"" + id + "\", \"BillingCity\" : \"San Francisco\" }";
+        updater.updateRecord(json);
+        ret = retriever.retrieveRecord("/" + id);
+        log.info("Updated: " + ret);
+        json = "{ \"id\": \"" + id + "\" }";
+        deleter.deleteRecord(json);
     }
-    
-    @Test
-    public void testGetObjects() throws Exception {
-        if (!checkSalesForcePropertiesConfigured()) {
-            return;
-        }
 
-        JSONObject jsonObject = client.getObjects();
-        log.info("Objects: " + jsonObject);
-    }
-    
-    @Test
-    public void testGetObjectsFromResourcePath() throws Exception {
-        if (!checkSalesForcePropertiesConfigured()) {
-            return;
-        }
-
-        JSONObject jsonObject = client.getObjectsFromResourcePath("/sobjects/Account");
-        log.info("Objects: " + jsonObject);
-    }
-    
-    @Test
-    public void testCreateAndUpdateAndDeleteRecord() throws Exception {
-        if (!checkSalesForcePropertiesConfigured()) {
-            return;
-        }
-
-        JSONObject json = JSONObject.fromObject("{ \"Name\": \"test\" } ");
-        JSONObject jsonObject = client.createRecord("/sobjects/Account", json);
-        log.info("Created Objects: " + jsonObject);
-        String id = jsonObject.getString("id");
-        
-        client.updateRecord("/sobjects/Account/" + id + "/", JSONObject.fromObject("{ \"BillingCity\" : \"San Francisco\" }"));
-        jsonObject = client.getObjectsFromResourcePath("/sobjects/Account/" + id);
-        log.info("Updated Objects: " + jsonObject);
-        
-        client.createOrUpdateRecord("/sobjects/Account/" + id + "/", JSONObject.fromObject("{ \"BillingCountry\" : \"USA\" }"));
-        jsonObject = client.getObjectsFromResourcePath("/sobjects/Account/" + id);
-        log.info("Updated Objects: " + jsonObject);
-        
-        client.deleteRecord("/sobjects/Account/" + id + "/");
-        log.info("Deleted Objects: " + jsonObject);
-    }
-    
     private boolean checkSalesForcePropertiesConfigured() {
         if (connectionInfo == null) {
             System.out.println("!!!!!!! Set SalesForce Authorization Properties in build.properties !!!!!!!");
@@ -193,4 +160,5 @@ public class SalesForceRestClientTest {
         
         return true;
     }
+
 }

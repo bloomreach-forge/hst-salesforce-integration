@@ -17,12 +17,9 @@ package org.onehippo.forge.sforcecomps.client.task;
 
 import java.io.IOException;
 
-import net.sf.json.JSONObject;
-
-import org.apache.commons.lang.StringUtils;
 import org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient;
 
-public class SalesForceRecordUpdater {
+public class SalesForceRecordRetriever {
 
     private SalesForceRestClient client;
     private String baseResourcePath;
@@ -43,12 +40,12 @@ public class SalesForceRecordUpdater {
         this.baseResourcePath = baseResourcePath;
     }
 
-    public String updateRecord(String json) throws IOException {
-        JSONObject jsonObject = JSONObject.fromObject(json);
-        String id = jsonObject.getString("id");
-        jsonObject.remove("id");
-        client.updateRecord(StringUtils.removeEnd(baseResourcePath, "/") + "/" + id + "/", jsonObject);
-        return json;
+    public String retrieveRecord(String resourcePath) throws IOException {
+        if (baseResourcePath != null) {
+            return client.getObjectsFromResourcePath(baseResourcePath + resourcePath).toString();
+        } else {
+            return client.getObjectsFromResourcePath(resourcePath).toString();
+        }
     }
 
 }

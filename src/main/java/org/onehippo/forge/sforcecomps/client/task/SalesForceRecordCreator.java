@@ -24,7 +24,7 @@ import org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient;
 public class SalesForceRecordCreator {
 
     private SalesForceRestClient client;
-    private String resourcePath;
+    private String baseResourcePath;
     private boolean createOrUpdate;
 
     public SalesForceRestClient getClient() {
@@ -35,12 +35,12 @@ public class SalesForceRecordCreator {
         this.client = client;
     }
 
-    public String getResourcePath() {
-        return resourcePath;
+    public String getBaseResourcePath() {
+        return baseResourcePath;
     }
 
-    public void setResourcePath(String resourcePath) {
-        this.resourcePath = resourcePath;
+    public void setBaseResourcePath(String baseResourcePath) {
+        this.baseResourcePath = baseResourcePath;
     }
 
     public boolean isCreateOrUpdate() {
@@ -53,9 +53,9 @@ public class SalesForceRecordCreator {
 
     public String createRecord(String json) throws IOException {
         if (createOrUpdate) {
-            return client.createOrUpdateRecord(resourcePath, JSONObject.fromObject(json)).toString();
+            return client.createOrUpdateRecord(baseResourcePath, JSONObject.fromObject(json)).toString();
         } else {
-            return client.createRecord(resourcePath, JSONObject.fromObject(json)).toString();
+            return client.createRecord(baseResourcePath, JSONObject.fromObject(json)).toString();
         }
     }
 
