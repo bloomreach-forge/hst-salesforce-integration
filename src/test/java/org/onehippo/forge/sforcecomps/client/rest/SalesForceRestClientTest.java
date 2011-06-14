@@ -37,18 +37,19 @@ public class SalesForceRestClientTest {
     
     private static Logger log = LoggerFactory.getLogger(SalesForceRestClientTest.class);
     
-    private String clientId;
-    private String clientSecret;
-    private String username;
-    private String password;
-    private String securityToken;
-    
+    private SalesForceConnectionInfo connectionInfo;
     private SalesForceRestClient client;
     
     @Before
     public void setUp() throws Exception {
         Properties props = new Properties();
         File propFile = new File("build.properties");
+        
+        String clientId = null;
+        String clientSecret = null;
+        String username = null;
+        String password = null;
+        String securityToken = null;
         
         if (propFile.isFile()) {
             FileInputStream fis = null;
@@ -67,16 +68,19 @@ public class SalesForceRestClientTest {
             securityToken = props.getProperty("salesforce.securityToken");
         }
         
+        connectionInfo = new SalesForceConnectionInfo();
+        connectionInfo.setClientId(clientId);
+        connectionInfo.setClientSecret(clientSecret);
+        connectionInfo.setUsername(username);
+        connectionInfo.setPassword(password);
+        connectionInfo.setSecurityToken(securityToken);
+
         if (!checkSalesForcePropertiesConfigured()) {
             return;
         }
         
         client = new SalesForceRestClient();
-        client.setClientId(clientId);
-        client.setClientSecret(clientSecret);
-        client.setUsername(username);
-        client.setPassword(password);
-        client.setSecurityToken(securityToken);
+        client.setConnectionInfo(connectionInfo);
         client.establishAccessToken();
         
         assertFalse(StringUtils.isBlank(client.getAuthInfo().getAccessToken()));
@@ -156,33 +160,37 @@ public class SalesForceRestClientTest {
         log.info("Deleted Objects: " + jsonObject);
     }
     
-    private boolean checkSalesForcePropertiesConfigured() {
-        boolean configured = true;
-        
-        if (StringUtils.isBlank(clientId)) {
-            configured = false;
-        }
-        
-        if (StringUtils.isBlank(clientSecret)) {
-            configured = false;
-        }
-        
-        if (StringUtils.isBlank(username)) {
-            configured = false;
-        }
-        
-        if (StringUtils.isBlank(password)) {
-            configured = false;
-        }
-        
-        if (StringUtils.isBlank(securityToken)) {
-            configured = false;
-        }
-        
-        if (!configured) {
+    public boolean checkSalesForcePropertiesConfigured() {
+        if (connectionInfo == null) {
             System.out.println("!!!!!!! Set SalesForce Authorization Properties in build.properties !!!!!!!");
+            return false;
         }
         
-        return configured;
+        if (connectionInfo.getClientId() == null) {
+            System.out.println("!!!!!!! Set SalesForce Authorization Properties in build.properties !!!!!!!");
+            return false;
+        }
+        
+        if (connectionInfo.getClientSecret() == null) {
+            System.out.println("!!!!!!! Set SalesForce Authorization Properties in build.properties !!!!!!!");
+            return false;
+        }
+        
+        if (connectionInfo.getUsername() == null) {
+            System.out.println("!!!!!!! Set SalesForce Authorization Properties in build.properties !!!!!!!");
+            return false;
+        }
+        
+        if (connectionInfo.getPassword() == null) {
+            System.out.println("!!!!!!! Set SalesForce Authorization Properties in build.properties !!!!!!!");
+            return false;
+        }
+        
+        if (connectionInfo.getSecurityToken() == null) {
+            System.out.println("!!!!!!! Set SalesForce Authorization Properties in build.properties !!!!!!!");
+            return false;
+        }
+        
+        return true;
     }
 }

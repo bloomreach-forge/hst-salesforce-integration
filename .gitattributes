@@ -2,8 +2,11 @@
 /build.properties-example -text
 /pom.xml -text
 src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceAuthInfo.java -text svneol=unset#text/plain
+src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceConnectionInfo.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestBrowser.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestClient.java -text
+src/main/java/org/onehippo/forge/sforcecomps/client/task/SalesForceRecordCreator.java -text svneol=unset#text/plain
+src/main/java/org/onehippo/forge/sforcecomps/client/task/SalesForceRecordUpdater.java -text svneol=unset#text/plain
 src/site/checkstyle.xml -text svneol=unset#text/plain
 src/site/site.xml -text svneol=unset#text/plain
 src/site/xdoc/build-from-source.xml -text svneol=unset#text/plain

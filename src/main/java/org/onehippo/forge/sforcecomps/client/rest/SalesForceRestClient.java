@@ -45,104 +45,17 @@ import org.apache.http.util.EntityUtils;
  */
 public class SalesForceRestClient {
     
-    public static final String DEFAULT_BASE_URL = "https://na1.salesforce.com";
-    public static final String DEFAULT_AUTH_TOKEN_PATH = "/services/oauth2/token";
-    public static final String DEFAULT_SERVICES_DATA_PATH = "/services/data";
-    public static final String DEFAULT_SERVICES_DATA_ENV_PATH = "/services/data/v20.0";
-
     private HttpClient httpClient = null;
 
-    private String baseUrl = DEFAULT_BASE_URL;
-    private String authTokenPath = DEFAULT_AUTH_TOKEN_PATH;
-    private String baseServicesDataPath = DEFAULT_SERVICES_DATA_PATH;
-    private String baseServicesDataEnvPath = DEFAULT_SERVICES_DATA_ENV_PATH;
-    
-    private String clientId;
-    private String clientSecret;
-    private String username;
-    private String password;
-    private String securityToken;
-    
+    private SalesForceConnectionInfo connectionInfo = new SalesForceConnectionInfo();    
     private SalesForceAuthInfo authInfo;
 
-    public SalesForceRestClient() {
-        this(null);
+    public void setConnectionInfo(SalesForceConnectionInfo connectionInfo) {
+        this.connectionInfo = connectionInfo;
     }
 
-    public SalesForceRestClient(String baseUrl) {
-        this.baseUrl = StringUtils.defaultIfEmpty(baseUrl, DEFAULT_BASE_URL);
-    }
-
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public String getAuthTokenPath() {
-        return authTokenPath;
-    }
-
-    public void setAuthTokenPath(String authTokenPath) {
-        this.authTokenPath = authTokenPath;
-    }
-
-    public String getBaseServicesDataPath() {
-        return baseServicesDataPath;
-    }
-
-    public void setBaseServicesDataPath(String baseServicesDataPath) {
-        this.baseServicesDataPath = baseServicesDataPath;
-    }
-
-    public String getBaseServicesDataEnvPath() {
-        return baseServicesDataEnvPath;
-    }
-
-    public void setBaseServicesDataEnvPath(String baseServicesDataEnvPath) {
-        this.baseServicesDataEnvPath = baseServicesDataEnvPath;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getClientSecret() {
-        return clientSecret;
-    }
-
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getSecurityToken() {
-        return securityToken;
-    }
-
-    public void setSecurityToken(String securityToken) {
-        this.securityToken = securityToken;
+    public SalesForceConnectionInfo getConnectionInfo() {
+        return connectionInfo;
     }
     
     public SalesForceAuthInfo getAuthInfo() {
@@ -164,11 +77,11 @@ public class SalesForceRestClient {
     public void establishAccessToken() throws IOException {
         List <NameValuePair> formParams = new ArrayList<NameValuePair>();
         formParams.add(new BasicNameValuePair("grant_type", "password"));
-        formParams.add(new BasicNameValuePair("client_id", getClientId()));
-        formParams.add(new BasicNameValuePair("client_secret", getClientSecret()));
-        formParams.add(new BasicNameValuePair("username", getUsername()));
-        formParams.add(new BasicNameValuePair("password", getPassword() + getSecurityToken()));
-        HttpPost post = new HttpPost(getBaseUrl() + getAuthTokenPath());
+        formParams.add(new BasicNameValuePair("client_id", getConnectionInfo().getClientId()));
+        formParams.add(new BasicNameValuePair("client_secret", getConnectionInfo().getClientSecret()));
+        formParams.add(new BasicNameValuePair("username", getConnectionInfo().getUsername()));
+        formParams.add(new BasicNameValuePair("password", getConnectionInfo().getPassword() + getConnectionInfo().getSecurityToken()));
+        HttpPost post = new HttpPost(getConnectionInfo().getBaseUrl() + getConnectionInfo().getAuthTokenPath());
         post.setEntity(new UrlEncodedFormEntity(formParams));
 
         HttpEntity httpEntity = null;
@@ -210,7 +123,7 @@ public class SalesForceRestClient {
      * @see http://www.salesforce.com/us/developer/docs/api_rest/index.htm
      */
     public JSONArray getAvailableVersions() throws IOException {
-        return getJSONArrayFromURL(getBaseUrl() + StringUtils.removeEnd(getBaseServicesDataPath(), "/") + "/");
+        return getJSONArrayFromURL(getConnectionInfo().getBaseUrl() + StringUtils.removeEnd(getConnectionInfo().getBaseServicesDataPath(), "/") + "/");
     }
 
     /**
@@ -538,9 +451,9 @@ public class SalesForceRestClient {
 
     private String getServiceBaseUrl() {
         if (authInfo.getInstanceUrl() != null) {
-            return authInfo.getInstanceUrl() + baseServicesDataEnvPath;
+            return authInfo.getInstanceUrl() + getConnectionInfo().getBaseServicesDataEnvPath();
         } else {
-            return getBaseUrl() + getBaseServicesDataEnvPath();
+            return getConnectionInfo().getBaseUrl() + getConnectionInfo().getBaseServicesDataEnvPath();
         }
     }
     
