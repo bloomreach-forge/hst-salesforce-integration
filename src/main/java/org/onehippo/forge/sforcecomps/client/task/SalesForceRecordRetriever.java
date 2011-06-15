@@ -17,30 +17,11 @@ package org.onehippo.forge.sforcecomps.client.task;
 
 import java.io.IOException;
 
-import org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient;
-
-public class SalesForceRecordRetriever {
-
-    private SalesForceRestClient client;
-    private String baseResourcePath;
-
-    public SalesForceRestClient getClient() {
-        return client;
-    }
-
-    public void setClient(SalesForceRestClient client) {
-        this.client = client;
-    }
-
-    public String getBaseResourcePath() {
-        return baseResourcePath;
-    }
-
-    public void setBaseResourcePath(String baseResourcePath) {
-        this.baseResourcePath = baseResourcePath;
-    }
+public class SalesForceRecordRetriever extends AbstractSalesForceTask {
 
     public String perform(String resourcePath) throws IOException {
+        client.establishAccessToken();
+        
         if (baseResourcePath != null) {
             return client.getObjectsFromResourcePath(baseResourcePath + resourcePath).toString();
         } else {

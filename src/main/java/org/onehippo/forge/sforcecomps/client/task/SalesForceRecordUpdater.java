@@ -20,30 +20,12 @@ import java.io.IOException;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
-import org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient;
 
-public class SalesForceRecordUpdater {
-
-    private SalesForceRestClient client;
-    private String baseResourcePath;
-
-    public SalesForceRestClient getClient() {
-        return client;
-    }
-
-    public void setClient(SalesForceRestClient client) {
-        this.client = client;
-    }
-
-    public String getBaseResourcePath() {
-        return baseResourcePath;
-    }
-
-    public void setBaseResourcePath(String baseResourcePath) {
-        this.baseResourcePath = baseResourcePath;
-    }
+public class SalesForceRecordUpdater extends AbstractSalesForceTask {
 
     public String perform(String json) throws IOException {
+        client.establishAccessToken();
+        
         JSONObject jsonObject = JSONObject.fromObject(json);
         String id = jsonObject.getString("id");
         jsonObject.remove("id");

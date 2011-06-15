@@ -17,28 +17,29 @@ package org.onehippo.forge.sforcecomps.client.task;
 
 import java.io.IOException;
 
-import net.sf.json.JSONObject;
+import org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient;
 
-public class SalesForceRecordCreator extends AbstractSalesForceTask {
+public abstract class AbstractSalesForceTask {
 
-    private boolean createOrUpdate;
+    protected SalesForceRestClient client;
+    protected String baseResourcePath;
 
-    public boolean isCreateOrUpdate() {
-        return createOrUpdate;
+    public SalesForceRestClient getClient() {
+        return client;
     }
 
-    public void setCreateOrUpdate(boolean createOrUpdate) {
-        this.createOrUpdate = createOrUpdate;
+    public void setClient(SalesForceRestClient client) {
+        this.client = client;
     }
 
-    public String perform(String json) throws IOException {
-        client.establishAccessToken();
-        
-        if (createOrUpdate) {
-            return client.createOrUpdateRecord(baseResourcePath, JSONObject.fromObject(json)).toString();
-        } else {
-            return client.createRecord(baseResourcePath, JSONObject.fromObject(json)).toString();
-        }
+    public String getBaseResourcePath() {
+        return baseResourcePath;
     }
 
+    public void setBaseResourcePath(String baseResourcePath) {
+        this.baseResourcePath = baseResourcePath;
+    }
+    
+    public abstract String perform(String input) throws IOException;
+    
 }

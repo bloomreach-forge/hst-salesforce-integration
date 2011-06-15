@@ -5,6 +5,7 @@ src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceAuthInfo.java
 src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceConnectionInfo.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestBrowser.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestClient.java -text
+src/main/java/org/onehippo/forge/sforcecomps/client/task/AbstractSalesForceTask.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/task/SalesForceRecordCreator.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/task/SalesForceRecordDeleter.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/task/SalesForceRecordRetriever.java -text svneol=unset#text/plain
