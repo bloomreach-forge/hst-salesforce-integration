@@ -114,6 +114,10 @@ public class SalesForceTasksTest {
     
     @Test
     public void testTasks() throws Exception {
+        if (!checkSalesForcePropertiesConfigured()) {
+            return;
+        }
+        
         String json = "{ \"Name\": \"test\" }";
         String ret = creator.perform(json);
         log.info("Created: " + ret);
@@ -129,6 +133,10 @@ public class SalesForceTasksTest {
     
     @Test
     public void testSOQL() throws Exception {
+        if (!checkSalesForcePropertiesConfigured()) {
+            return;
+        }
+
         retriever.setBaseResourcePath(null);
         String ret = retriever.perform("/query/?q=SELECT+name+from+Account");
         log.info("Query result: " + ret);
