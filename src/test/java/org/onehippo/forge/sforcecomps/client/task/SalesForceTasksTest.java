@@ -115,22 +115,22 @@ public class SalesForceTasksTest {
     @Test
     public void testTasks() throws Exception {
         String json = "{ \"Name\": \"test\" }";
-        String ret = creator.createRecord(json);
+        String ret = creator.perform(json);
         log.info("Created: " + ret);
         JSONObject jsonRet = JSONObject.fromObject(ret);
         String id = jsonRet.getString("id");
         json = "{ \"id\": \"" + id + "\", \"BillingCity\" : \"San Francisco\" }";
-        updater.updateRecord(json);
-        ret = retriever.retrieveRecord("/" + id);
+        updater.perform(json);
+        ret = retriever.perform("/" + id);
         log.info("Updated: " + ret);
         json = "{ \"id\": \"" + id + "\" }";
-        deleter.deleteRecord(json);
+        deleter.perform(json);
     }
     
     @Test
     public void testSOQL() throws Exception {
         retriever.setBaseResourcePath(null);
-        String ret = retriever.retrieveRecord("/query/?q=SELECT+name+from+Account");
+        String ret = retriever.perform("/query/?q=SELECT+name+from+Account");
         log.info("Query result: " + ret);
     }
 

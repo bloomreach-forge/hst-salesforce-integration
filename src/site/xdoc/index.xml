@@ -42,6 +42,50 @@
             <td>A SalesForce REST Client API Wrapper class</td>
             <td>org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient</td>
           </tr>
+          <tr>
+            <td>SalesForceRestBrowser</td>
+            <td>
+              A Simple SalesForce REST Browser Client which can be used in Command-line.
+              You can run this browser with Maven command as well: $ mvn exec:java
+            </td>
+            <td>org.onehippo.forge.sforcecomps.client.rest.SalesForceRestBrowser</td>
+          </tr>
+          <tr>
+            <td>SalesForceRecordCreator</td>
+            <td>
+              SalesForce Record Creation Task Component.
+              This task component creates a record from a JSON string on a specified resource path.
+            </td>
+            <td>org.onehippo.forge.sforcecomps.client.task.SalesForceRecordCreator</td>
+          </tr>
+          <tr>
+            <td>SalesForceRecordRetriever</td>
+            <td>
+              SalesForce Record Retrieval Task Component.
+              This task component retrieves a record as JSON string on a specified resource path.
+            </td>
+            <td>org.onehippo.forge.sforcecomps.client.task.SalesForceRecordRetriever</td>
+          </tr>
+          <tr>
+            <td>SalesForceRecordUpdater</td>
+            <td>
+              SalesForce Record Updating Task Component.
+              This task component updates a record from a JSON string on a specified base resource path.
+              The input JSON string must contain "id" property. This task will generate the target resource path
+              by appending the ID property to the base resource path.
+            </td>
+            <td>org.onehippo.forge.sforcecomps.client.task.SalesForceRecordUpdater</td>
+          </tr>
+          <tr>
+            <td>SalesForceRecordDeleter</td>
+            <td>
+              SalesForce Record Deletion Task Component.
+              This task component deletes a record from a JSON string on a specified base resource path.
+              The input JSON string must contain "id" property. This task will generate the target resource path
+              by appending the ID property to the base resource path.
+            </td>
+            <td>org.onehippo.forge.sforcecomps.client.task.SalesForceRecordDeleter</td>
+          </tr>
         </table>
       </subsection>
     </section>

@@ -16,6 +16,7 @@ src/site/xdoc/gettingstarted.xml -text svneol=unset#text/plain
 src/site/xdoc/index.xml -text svneol=unset#text/plain
 src/site/xdoc/install.xml -text svneol=unset#text/plain
 src/site/xdoc/release-notes.xml -text svneol=unset#text/plain
+src/site/xdoc/usingtasks.xml -text svneol=unset#text/plain
 src/test/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestClientTest.java -text svneol=unset#text/plain
 src/test/java/org/onehippo/forge/sforcecomps/client/task/SalesForceTasksTest.java -text svneol=unset#text/plain
 src/test/resources/log4j.dtd -text svneol=unset#text/plain

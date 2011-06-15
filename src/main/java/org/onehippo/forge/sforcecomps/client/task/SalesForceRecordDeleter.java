@@ -43,7 +43,7 @@ public class SalesForceRecordDeleter {
         this.baseResourcePath = baseResourcePath;
     }
 
-    public String deleteRecord(String json) throws IOException {
+    public String perform(String json) throws IOException {
         JSONObject jsonObject = JSONObject.fromObject(json);
         client.deleteRecord(StringUtils.removeEnd(baseResourcePath, "/") + "/" + jsonObject.getString("id") + "/");
         return json;

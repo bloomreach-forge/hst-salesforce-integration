@@ -17,10 +17,161 @@
   </properties>
   <body>
     <section name="Getting Started">
-      <subsection name="Example with Simple Java Codes">
+      <subsection name="Using SalesForceRestClient component">
         <p>
-          TODO
+          SalesForceRestClient is a client tool component which makes it easy to invoke SalesForce REST APIs.
         </p>
+        <p>
+          Most properties of SalesForceRestClient are configured with default values such as SalesForce REST API URLs.
+          Those properties can be configured by yourself and some security related properties should be configured for
+          yourself or your organization.
+          Here are properties list you can configure:
+        </p>
+        <table>
+          <tr>
+            <th colspan="2">Property</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Example value</th>
+            <th>Default value</th>
+          </tr>
+          <tr>
+            <td colspan="2">connectionInfo</td>
+            <td>org.onehippo.forge.sforcecomps.client.rest.SalesForceConnectionInfo</td>
+            <td>SalesForce REST API Connection Info Object</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>baseUrl</td>
+            <td>java.lang.String</td>
+            <td>SalesForce REST API Base URL</td>
+            <td>https://na9.salesforce.com</td>
+            <td>https://na1.salesforce.com</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>authTokenPath</td>
+            <td>java.lang.String</td>
+            <td>SalesForce oAuth Token Request URL Path</td>
+            <td>/services/oauth2/token</td>
+            <td>/services/oauth2/token</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>baseServicesDataPath</td>
+            <td>java.lang.String</td>
+            <td>SalesForce Data Services URL Path</td>
+            <td>/services/data</td>
+            <td>/services/data</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>baseServicesDataEnvPath</td>
+            <td>java.lang.String</td>
+            <td>SalesForce Data Services Environment URL Path</td>
+            <td>/services/data/v22.0</td>
+            <td>/services/data/v20.0</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>clientId</td>
+            <td>java.lang.String</td>
+            <td>The Client ID to connect to SalesForce REST API</td>
+            <td>3MVG9lKcPoNINVBJSoQsNCD.HHDdbugPsNXwwyFbgb47KWa_PTv</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>clientSecret</td>
+            <td>java.lang.String</td>
+            <td>The Client Secret to connect to SalesForce REST API</td>
+            <td>5678471853609579508</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>username</td>
+            <td>java.lang.String</td>
+            <td>The username to connect to SalesForce REST API</td>
+            <td>tester@onehippo.org</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>password</td>
+            <td>java.lang.String</td>
+            <td>The password to connect to SalesForce REST API</td>
+            <td>password</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>securityToken</td>
+            <td>java.lang.String</td>
+            <td>The Security Token to connect to SalesForce REST API</td>
+            <td>hhWVl82SHphnA50OTBt2DAZk</td>
+            <td></td>
+          </tr>
+        </table>
+        <p>
+          Here is an example on how to create and initialize SalesForceRestClient component in Java code:
+        </p>
+        <source><![CDATA[
+SalesForceConnectionInfo connectionInfo = new SalesForceConnectionInfo();
+connectionInfo.setClientId("3MVG9lKcPoNINVBJSoQsNCD.HHDdbugPsNXwwyFbgb47KWa_PTv");
+connectionInfo.setClientSecret("5678471853609579508");
+connectionInfo.setUsername("tester@onehippo.org");
+connectionInfo.setPassword("password");
+connectionInfo.setSecurityToken("hhWVl82SHphnA50OTBt2DAZk");
+
+SalesForceRestClient client = new SalesForceRestClient();
+client.setConnectionInfo(connectionInfo);
+
+// Establish access token now; after establishing you can use other methods without authorization.
+client.establishAccessToken();
+        ]]></source>
+      </subsection>
+      <subsection name="Creating a record">
+        <p>
+          Here's an example of how to create an Account record by using simple JSON objects.
+        </p>
+        <source><![CDATA[
+JSONObject json = JSONObject.fromObject("{ \"Name\": \"test\" }");
+JSONObject jsonObject = client.createRecord("/sobjects/Account", json);
+System.out.println("Created object: " + jsonObject);
+// Now you can get the ID of the created account record.
+String id = jsonObject.getString("id");
+        ]]></source>
+      </subsection>
+      <subsection name="Retrieving a record">
+        <p>
+          Here's an example of how to create an Account record by using simple JSON objects.
+        </p>
+        <source><![CDATA[
+JSONObject jsonObject = client.getObjectsFromResourcePath("/sobjects/Account/12345/");
+System.out.println("Retrieved object: " + jsonObject);
+        ]]></source>
+      </subsection>
+      <subsection name="Updating a record">
+        <p>
+          Here's an example of how to create an Account record by using simple JSON objects.
+        </p>
+        <source><![CDATA[
+client.updateRecord("/sobjects/Account/12345/", JSONObject.fromObject("{ \"BillingCity\" : \"San Francisco\" }"));
+jsonObject = client.getObjectsFromResourcePath("/sobjects/Account/12345/");
+System.out.println("Updated Object: " + jsonObject);
+        ]]></source>
+      </subsection>
+      <subsection name="Deleting a record">
+        <p>
+          Here's an example of how to create an Account record by using simple JSON objects.
+        </p>
+        <source><![CDATA[
+client.deleteRecord("/sobjects/Account/12345/");
+System.out.println("Deleted Object Path: /sobjects/Account/12345/");
+        ]]></source>
       </subsection>
     </section>
   </body>

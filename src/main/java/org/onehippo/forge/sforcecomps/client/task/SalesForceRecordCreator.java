@@ -51,7 +51,7 @@ public class SalesForceRecordCreator {
         this.createOrUpdate = createOrUpdate;
     }
 
-    public String createRecord(String json) throws IOException {
+    public String perform(String json) throws IOException {
         if (createOrUpdate) {
             return client.createOrUpdateRecord(baseResourcePath, JSONObject.fromObject(json)).toString();
         } else {

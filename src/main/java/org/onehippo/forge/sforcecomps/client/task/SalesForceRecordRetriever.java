@@ -40,7 +40,7 @@ public class SalesForceRecordRetriever {
         this.baseResourcePath = baseResourcePath;
     }
 
-    public String retrieveRecord(String resourcePath) throws IOException {
+    public String perform(String resourcePath) throws IOException {
         if (baseResourcePath != null) {
             return client.getObjectsFromResourcePath(baseResourcePath + resourcePath).toString();
         } else {

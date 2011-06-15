@@ -43,7 +43,7 @@ public class SalesForceRecordUpdater {
         this.baseResourcePath = baseResourcePath;
     }
 
-    public String updateRecord(String json) throws IOException {
+    public String perform(String json) throws IOException {
         JSONObject jsonObject = JSONObject.fromObject(json);
         String id = jsonObject.getString("id");
         jsonObject.remove("id");
