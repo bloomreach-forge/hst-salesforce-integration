@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-import net.sf.json.JSONObject;
+import net.sf.json.JSON;
 
 public class SalesForceRestBrowser {
     
@@ -69,9 +69,9 @@ public class SalesForceRestBrowser {
         client.establishAccessToken();
     }
     
-    public JSONObject getObjectsFromResourcePath(String resourcePath) throws Exception {
-        JSONObject jsonObject = client.getObjectsFromResourcePath(resourcePath);
-        return jsonObject;
+    public JSON getObjectsFromResourcePath(String resourcePath) throws Exception {
+        JSON json = client.getObjectsFromResourcePath(resourcePath);
+        return json;
     }
     
     public boolean checkSalesForcePropertiesConfigured() {
@@ -125,7 +125,7 @@ public class SalesForceRestBrowser {
         
         while (!"quit".equals(line)) {
             if (!"".equals(line)) {
-                JSONObject json = browser.getObjectsFromResourcePath(line);
+                JSON json = browser.getObjectsFromResourcePath(line);
                 System.out.println(json);
                 System.out.println();
             }

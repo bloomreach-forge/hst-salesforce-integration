@@ -19,8 +19,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.json.JSONArray;
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
@@ -91,8 +92,13 @@ public class SalesForceRestClient {
             httpEntity = httpResponse.getEntity();
             
             if (httpEntity != null) {
-                JSONObject json = JSONObject.fromObject(EntityUtils.toString(httpEntity));
-                authInfo = new SalesForceAuthInfo(json);
+                JSON json = JSONSerializer.toJSON(EntityUtils.toString(httpEntity));
+                
+                if (json.isArray() || !((JSONObject) json).containsKey("id")) {
+                    throw new IOException("Failed to establish access token: " + json);
+                }
+                
+                authInfo = new SalesForceAuthInfo((JSONObject) json);
             }
         } finally {
             if (httpEntity != null) {
@@ -122,8 +128,8 @@ public class SalesForceRestClient {
      * @throws IOException
      * @see http://www.salesforce.com/us/developer/docs/api_rest/index.htm
      */
-    public JSONArray getAvailableVersions() throws IOException {
-        return getJSONArrayFromURL(getConnectionInfo().getBaseUrl() + StringUtils.removeEnd(getConnectionInfo().getBaseServicesDataPath(), "/") + "/");
+    public JSON getAvailableVersions() throws IOException {
+        return getJSONFromURL(getConnectionInfo().getBaseUrl() + StringUtils.removeEnd(getConnectionInfo().getBaseServicesDataPath(), "/") + "/");
     }
 
     /**
@@ -144,8 +150,8 @@ public class SalesForceRestClient {
      * @throws IOException
      * @see http://www.salesforce.com/us/developer/docs/api_rest/index.htm
      */
-    public JSONObject getAvailableResources() throws IOException {
-        return getJSONObjectFromURL(getServiceBaseUrl());
+    public JSON getAvailableResources() throws IOException {
+        return getJSONFromURL(getServiceBaseUrl());
     }
 
     /**
@@ -194,7 +200,7 @@ public class SalesForceRestClient {
      * </PRE> 
      * @see http://www.salesforce.com/us/developer/docs/api_rest/index.htm
      */
-    public JSONObject getObjects() throws IOException {
+    public JSON getObjects() throws IOException {
         return getObjectsFromResourcePath("/sobjects/");
     }
 
@@ -211,8 +217,8 @@ public class SalesForceRestClient {
      * @throws IOException
      * @see http://www.salesforce.com/us/developer/docs/api_rest/index.htm
      */
-    public JSONObject getObjectsFromResourcePath(String resourcePath) throws IOException {
-        return getJSONObjectFromURL(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/"));
+    public JSON getObjectsFromResourcePath(String resourcePath) throws IOException {
+        return getJSONFromURL(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/"));
     }
     
     /**
@@ -235,7 +241,8 @@ public class SalesForceRestClient {
      * }
      * </PRE>
      */    
-    public JSONObject createRecord(String resourcePath, JSONObject json) throws IOException {
+    public JSON createRecord(String resourcePath, JSON json) throws IOException {
+        JSON jsonRet = null;
         HttpPost httpRequest = new HttpPost(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/") + "/");
         addHeaders(httpRequest);
         httpRequest.setEntity(new StringEntity(json.toString()));
@@ -246,14 +253,14 @@ public class SalesForceRestClient {
             HttpResponse httpResponse = getHttpClient().execute(httpRequest);
             StatusLine status = httpResponse.getStatusLine();
 
-            if (status.getStatusCode() >= 400) {
-                throw new IOException("Failure: " + status.toString());
-            }
-
             httpEntity = httpResponse.getEntity();
             
             if (httpEntity != null) {
-                return JSONObject.fromObject(EntityUtils.toString(httpEntity));
+                jsonRet = JSONSerializer.toJSON(EntityUtils.toString(httpEntity));
+            }
+            
+            if (status.getStatusCode() >= 400) {
+                throw new IOException("Fail to create record: " + status.toString() + "\n" + jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -261,7 +268,7 @@ public class SalesForceRestClient {
             }
         }
         
-        return null;
+        return jsonRet;
     }
     
     /**
@@ -280,7 +287,8 @@ public class SalesForceRestClient {
      * none returned
      * </PRE>
      */
-    public void updateRecord(String resourcePath, JSONObject json) throws IOException {
+    public JSON updateRecord(String resourcePath, JSON json) throws IOException {
+        JSON jsonRet = null;
         HttpPut httpRequest = new HttpPut(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/") + "/"){
             @Override
             public String getMethod() {
@@ -297,16 +305,22 @@ public class SalesForceRestClient {
             HttpResponse httpResponse = getHttpClient().execute(httpRequest);
             StatusLine status = httpResponse.getStatusLine();
 
-            if (status.getStatusCode() >= 400) {
-                throw new IOException("Failure: " + status.toString());
-            }
-
             httpEntity = httpResponse.getEntity();
+            
+            if (httpEntity != null) {
+                jsonRet = JSONSerializer.toJSON(EntityUtils.toString(httpEntity));
+            }
+            
+            if (status.getStatusCode() >= 400) {
+                throw new IOException("Fail to update record: " + status.toString() + "\n" + jsonRet);
+            }
         } finally {
             if (httpEntity != null) {
                 EntityUtils.consume(httpEntity);
             }
         }
+        
+        return jsonRet;
     }
     
     /**
@@ -343,7 +357,8 @@ public class SalesForceRestClient {
      * }
      * </PRE>
      */
-    public JSONObject createOrUpdateRecord(String resourcePath, JSONObject json) throws IOException {
+    public JSON createOrUpdateRecord(String resourcePath, JSON json) throws IOException {
+        JSON jsonRet = null;
         HttpPut httpRequest = new HttpPut(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/") + "/") {
             @Override
             public String getMethod() {
@@ -360,14 +375,14 @@ public class SalesForceRestClient {
             HttpResponse httpResponse = getHttpClient().execute(httpRequest);
             StatusLine status = httpResponse.getStatusLine();
 
-            if (status.getStatusCode() >= 400) {
-                throw new IOException("Failure: " + status.toString());
-            }
-
             httpEntity = httpResponse.getEntity();
             
             if (httpEntity != null) {
-                return JSONObject.fromObject(EntityUtils.toString(httpEntity));
+                jsonRet = JSONSerializer.toJSON(EntityUtils.toString(httpEntity));
+            }
+            
+            if (status.getStatusCode() >= 400) {
+                throw new IOException("Fail to createOrUpdate record: " + status.toString() + "\n" + jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -375,7 +390,7 @@ public class SalesForceRestClient {
             }
         }
         
-        return null;
+        return jsonRet;
     }
     
     /**
@@ -389,7 +404,8 @@ public class SalesForceRestClient {
      * <H3>Example response body</H3>
      * None returned
      */
-    public void deleteRecord(String resourcePath) throws IOException {
+    public JSON deleteRecord(String resourcePath) throws IOException {
+        JSON jsonRet = null;
         HttpDelete httpRequest = new HttpDelete(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/") + "/");
 
         addHeaders(httpRequest);
@@ -400,27 +416,30 @@ public class SalesForceRestClient {
             HttpResponse httpResponse = getHttpClient().execute(httpRequest);
             StatusLine status = httpResponse.getStatusLine();
 
-            if (status.getStatusCode() >= 400) {
-                throw new IOException("Failure: " + status.toString());
-            }
-
             httpEntity = httpResponse.getEntity();
+            
+            if (httpEntity != null) {
+                jsonRet = JSONSerializer.toJSON(EntityUtils.toString(httpEntity));
+            }
+            
+            if (status.getStatusCode() >= 400) {
+                throw new IOException("Fail to delete record: " + status.toString() + "\n" + jsonRet);
+            }
         } finally {
             if (httpEntity != null) {
                 EntityUtils.consume(httpEntity);
             }
         }
+        
+        return jsonRet;
     }
     
-    private JSONArray getJSONArrayFromURL(String url) throws IOException {
-        return JSONArray.fromObject(getJSONStringFromURL(url));
-    }
-    
-    private JSONObject getJSONObjectFromURL(String url) throws IOException {
-        return JSONObject.fromObject(getJSONStringFromURL(url));
+    private JSON getJSONFromURL(String url) throws IOException {
+        return JSONSerializer.toJSON(getJSONStringFromURL(url));
     }
     
     private String getJSONStringFromURL(String url) throws IOException {
+        String jsonStr = null;
         HttpRequestBase httpRequest = new HttpGet(url);
 
         addHeaders(httpRequest);
@@ -431,14 +450,14 @@ public class SalesForceRestClient {
             HttpResponse httpResponse = getHttpClient().execute(httpRequest);
             StatusLine status = httpResponse.getStatusLine();
 
-            if (status.getStatusCode() >= 400) {
-                throw new IOException("Failure: " + status.toString());
-            }
-
             httpEntity = httpResponse.getEntity();
             
             if (httpEntity != null) {
-                return EntityUtils.toString(httpEntity);
+                jsonStr = EntityUtils.toString(httpEntity);
+            }
+            
+            if (status.getStatusCode() >= 400) {
+                throw new IOException("Failed to retrieve from url: " + status.toString() + "\n" + jsonStr);
             }
         } finally {
             if (httpEntity != null) {
@@ -446,7 +465,7 @@ public class SalesForceRestClient {
             }
         }
         
-        return null;
+        return jsonStr;
     }
 
     private String getServiceBaseUrl() {

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -100,7 +101,7 @@ public class SalesForceRestClientTest {
             return;
         }
 
-        JSONArray jsonArray = client.getAvailableVersions();
+        JSONArray jsonArray = (JSONArray) client.getAvailableVersions();
         log.info("Available Versions: " + jsonArray);
         assertTrue(jsonArray.size() > 0);
         JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -113,8 +114,8 @@ public class SalesForceRestClientTest {
             return;
         }
 
-        JSONObject jsonObject = client.getAvailableResources();
-        log.info("Available Resources: " + jsonObject);
+        JSON json = client.getAvailableResources();
+        log.info("Available Resources: " + json);
     }
     
     @Test
@@ -123,8 +124,8 @@ public class SalesForceRestClientTest {
             return;
         }
 
-        JSONObject jsonObject = client.getObjects();
-        log.info("Objects: " + jsonObject);
+        JSON json = client.getObjects();
+        log.info("Objects: " + json);
     }
     
     @Test
@@ -133,8 +134,8 @@ public class SalesForceRestClientTest {
             return;
         }
 
-        JSONObject jsonObject = client.getObjectsFromResourcePath("/sobjects/Account");
-        log.info("Objects: " + jsonObject);
+        JSON json = client.getObjectsFromResourcePath("/sobjects/Account");
+        log.info("Objects: " + json);
     }
     
     @Test
@@ -144,20 +145,20 @@ public class SalesForceRestClientTest {
         }
 
         JSONObject json = JSONObject.fromObject("{ \"Name\": \"test\" } ");
-        JSONObject jsonObject = client.createRecord("/sobjects/Account", json);
-        log.info("Created Objects: " + jsonObject);
-        String id = jsonObject.getString("id");
+        JSONObject jsonRet = (JSONObject) client.createRecord("/sobjects/Account", json);
+        log.info("Created Objects: " + jsonRet);
+        String id = jsonRet.getString("id");
         
         client.updateRecord("/sobjects/Account/" + id + "/", JSONObject.fromObject("{ \"BillingCity\" : \"San Francisco\" }"));
-        jsonObject = client.getObjectsFromResourcePath("/sobjects/Account/" + id);
-        log.info("Updated Objects: " + jsonObject);
+        jsonRet = (JSONObject) client.getObjectsFromResourcePath("/sobjects/Account/" + id);
+        log.info("Updated Objects: " + jsonRet);
         
         client.createOrUpdateRecord("/sobjects/Account/" + id + "/", JSONObject.fromObject("{ \"BillingCountry\" : \"USA\" }"));
-        jsonObject = client.getObjectsFromResourcePath("/sobjects/Account/" + id);
-        log.info("Updated Objects: " + jsonObject);
+        jsonRet = (JSONObject) client.getObjectsFromResourcePath("/sobjects/Account/" + id);
+        log.info("Updated Objects: " + jsonRet);
         
         client.deleteRecord("/sobjects/Account/" + id + "/");
-        log.info("Deleted Objects: " + jsonObject);
+        log.info("Deleted Objects: " + jsonRet);
     }
     
     private boolean checkSalesForcePropertiesConfigured() {
