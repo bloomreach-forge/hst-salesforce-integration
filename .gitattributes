@@ -1,6 +1,13 @@
 * text=auto !eol
 /build.properties-example -text
 /pom.xml -text
+src/main/java/org/onehippo/forge/sforcecomps/client/SalesForceException.java -text svneol=unset#text/plain
+src/main/java/org/onehippo/forge/sforcecomps/client/SalesForceRecordCreateException.java -text svneol=unset#text/plain
+src/main/java/org/onehippo/forge/sforcecomps/client/SalesForceRecordDeleteException.java -text svneol=unset#text/plain
+src/main/java/org/onehippo/forge/sforcecomps/client/SalesForceRecordException.java -text svneol=unset#text/plain
+src/main/java/org/onehippo/forge/sforcecomps/client/SalesForceRecordQueryException.java -text svneol=unset#text/plain
+src/main/java/org/onehippo/forge/sforcecomps/client/SalesForceRecordUpdateException.java -text svneol=unset#text/plain
+src/main/java/org/onehippo/forge/sforcecomps/client/SalesForceSecurityException.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceAuthInfo.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceConnectionInfo.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestBrowser.java -text svneol=unset#text/plain
@@ -10,6 +17,7 @@ src/main/java/org/onehippo/forge/sforcecomps/client/task/SalesForceRecordCreator
 src/main/java/org/onehippo/forge/sforcecomps/client/task/SalesForceRecordDeleter.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/task/SalesForceRecordRetriever.java -text svneol=unset#text/plain
 src/main/java/org/onehippo/forge/sforcecomps/client/task/SalesForceRecordUpdater.java -text svneol=unset#text/plain
+src/main/java/org/onehippo/forge/sforcecomps/client/util/JSONUtils.java -text svneol=unset#text/plain
 src/test/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestClientTest.java -text svneol=unset#text/plain
 src/test/java/org/onehippo/forge/sforcecomps/client/task/SalesForceTasksTest.java -text svneol=unset#text/plain
 src/test/resources/log4j.dtd -text svneol=unset#text/plain

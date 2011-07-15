@@ -39,6 +39,13 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.onehippo.forge.sforcecomps.client.SalesForceException;
+import org.onehippo.forge.sforcecomps.client.SalesForceRecordCreateException;
+import org.onehippo.forge.sforcecomps.client.SalesForceRecordDeleteException;
+import org.onehippo.forge.sforcecomps.client.SalesForceRecordQueryException;
+import org.onehippo.forge.sforcecomps.client.SalesForceRecordUpdateException;
+import org.onehippo.forge.sforcecomps.client.SalesForceSecurityException;
+import org.onehippo.forge.sforcecomps.client.util.JSONUtils;
 
 /**
  * Simple SalesForce REST API Wrapper using HTTP Client
@@ -47,9 +54,26 @@ import org.apache.http.util.EntityUtils;
 public class SalesForceRestClient {
     
     private HttpClient httpClient = null;
-
+    private boolean autoEstablishAuthToken = true;
+    private long authTokenTimeout = 30L * 60L * 1000L;
     private SalesForceConnectionInfo connectionInfo = new SalesForceConnectionInfo();    
     private SalesForceAuthInfo authInfo;
+    
+    public boolean isAutoEstablishAuthToken() {
+        return autoEstablishAuthToken;
+    }
+
+    public void setAutoEstablishAuthToken(boolean autoEstablishAuthToken) {
+        this.autoEstablishAuthToken = autoEstablishAuthToken;
+    }
+    
+    public long getAuthTokenTimeout() {
+        return authTokenTimeout;
+    }
+
+    public void setAuthTokenTimeout(long authTokenTimeout) {
+        this.authTokenTimeout = authTokenTimeout;
+    }
 
     public void setConnectionInfo(SalesForceConnectionInfo connectionInfo) {
         this.connectionInfo = connectionInfo;
@@ -75,7 +99,15 @@ public class SalesForceRestClient {
         this.httpClient = httpClient;
     }
     
-    public void establishAccessToken() throws IOException {
+    public void establishAccessToken() throws SalesForceException, IOException {
+        if (autoEstablishAuthToken && authInfo != null) {
+            if (authTokenTimeout <= 0) {
+                return;
+            } else if (System.currentTimeMillis() - authInfo.getCreatedAt() < authTokenTimeout) {
+                return;
+            }
+        }
+        
         List <NameValuePair> formParams = new ArrayList<NameValuePair>();
         formParams.add(new BasicNameValuePair("grant_type", "password"));
         formParams.add(new BasicNameValuePair("client_id", getConnectionInfo().getClientId()));
@@ -94,8 +126,8 @@ public class SalesForceRestClient {
             if (httpEntity != null) {
                 JSON json = JSONSerializer.toJSON(EntityUtils.toString(httpEntity));
                 
-                if (json.isArray() || !((JSONObject) json).containsKey("id")) {
-                    throw new IOException("Failed to establish access token: " + json);
+                if (json.isArray() || !JSONUtils.containsId((JSONObject) json)) {
+                    throw new SalesForceSecurityException("Failed to establish access token: " + json);
                 }
                 
                 authInfo = new SalesForceAuthInfo((JSONObject) json);
@@ -241,11 +273,15 @@ public class SalesForceRestClient {
      * }
      * </PRE>
      */    
-    public JSON createRecord(String resourcePath, JSON json) throws IOException {
+    public JSON createRecord(String resourcePath, JSON json) throws SalesForceException, IOException {
+        if (autoEstablishAuthToken) {
+            establishAccessToken();
+        }
+        
         JSON jsonRet = null;
         HttpPost httpRequest = new HttpPost(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/") + "/");
         addHeaders(httpRequest);
-        httpRequest.setEntity(new StringEntity(json.toString()));
+        httpRequest.setEntity(new StringEntity(JSONUtils.toString(json, "")));
         
         HttpEntity httpEntity = null;
 
@@ -260,7 +296,7 @@ public class SalesForceRestClient {
             }
             
             if (status.getStatusCode() >= 400) {
-                throw new IOException("Fail to create record: " + status.toString() + "\n" + jsonRet);
+                throw new SalesForceRecordCreateException("Fail to create record: " + status.toString() + "\n" + jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -287,7 +323,11 @@ public class SalesForceRestClient {
      * none returned
      * </PRE>
      */
-    public JSON updateRecord(String resourcePath, JSON json) throws IOException {
+    public JSON updateRecord(String resourcePath, JSON json) throws SalesForceException, IOException {
+        if (autoEstablishAuthToken) {
+            establishAccessToken();
+        }
+        
         JSON jsonRet = null;
         HttpPut httpRequest = new HttpPut(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/") + "/"){
             @Override
@@ -312,7 +352,7 @@ public class SalesForceRestClient {
             }
             
             if (status.getStatusCode() >= 400) {
-                throw new IOException("Fail to update record: " + status.toString() + "\n" + jsonRet);
+                throw new SalesForceRecordUpdateException("Fail to update record: " + status.toString() + "\n" + jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -357,7 +397,11 @@ public class SalesForceRestClient {
      * }
      * </PRE>
      */
-    public JSON createOrUpdateRecord(String resourcePath, JSON json) throws IOException {
+    public JSON createOrUpdateRecord(String resourcePath, JSON json) throws SalesForceException, IOException {
+        if (autoEstablishAuthToken) {
+            establishAccessToken();
+        }
+        
         JSON jsonRet = null;
         HttpPut httpRequest = new HttpPut(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/") + "/") {
             @Override
@@ -382,7 +426,7 @@ public class SalesForceRestClient {
             }
             
             if (status.getStatusCode() >= 400) {
-                throw new IOException("Fail to createOrUpdate record: " + status.toString() + "\n" + jsonRet);
+                throw new SalesForceRecordUpdateException("Fail to createOrUpdate record: " + status.toString() + "\n" + jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -404,7 +448,11 @@ public class SalesForceRestClient {
      * <H3>Example response body</H3>
      * None returned
      */
-    public JSON deleteRecord(String resourcePath) throws IOException {
+    public JSON deleteRecord(String resourcePath) throws SalesForceException, IOException {
+        if (autoEstablishAuthToken) {
+            establishAccessToken();
+        }
+        
         JSON jsonRet = null;
         HttpDelete httpRequest = new HttpDelete(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/") + "/");
 
@@ -423,7 +471,7 @@ public class SalesForceRestClient {
             }
             
             if (status.getStatusCode() >= 400) {
-                throw new IOException("Fail to delete record: " + status.toString() + "\n" + jsonRet);
+                throw new SalesForceRecordDeleteException("Fail to delete record: " + status.toString() + "\n" + jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -438,7 +486,11 @@ public class SalesForceRestClient {
         return JSONSerializer.toJSON(getJSONStringFromURL(url));
     }
     
-    private String getJSONStringFromURL(String url) throws IOException {
+    private String getJSONStringFromURL(String url) throws SalesForceException, IOException {
+        if (autoEstablishAuthToken) {
+            establishAccessToken();
+        }
+        
         String jsonStr = null;
         HttpRequestBase httpRequest = new HttpGet(url);
 
@@ -457,7 +509,7 @@ public class SalesForceRestClient {
             }
             
             if (status.getStatusCode() >= 400) {
-                throw new IOException("Failed to retrieve from url: " + status.toString() + "\n" + jsonStr);
+                throw new SalesForceRecordQueryException("Failed to retrieve from url: " + status.toString() + "\n" + jsonStr);
             }
         } finally {
             if (httpEntity != null) {
@@ -483,4 +535,5 @@ public class SalesForceRestClient {
         
         httpRequest.addHeader("Content-Type", "application/json");
     }
+    
 }

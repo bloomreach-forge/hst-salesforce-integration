@@ -13,21 +13,26 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.onehippo.forge.sforcecomps.client.task;
+package org.onehippo.forge.sforcecomps.client;
 
-import java.io.IOException;
+public class SalesForceException extends RuntimeException {
+    
+    private static final long serialVersionUID = 1L;
 
-import net.sf.json.JSONObject;
+    public SalesForceException() {
+        super();
+    }
 
-import org.apache.commons.lang.StringUtils;
-import org.onehippo.forge.sforcecomps.client.util.JSONUtils;
+    public SalesForceException(String message) {
+        super(message);
+    }
 
-public class SalesForceRecordDeleter extends AbstractSalesForceTask {
+    public SalesForceException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    public String perform(String json) throws IOException {
-        client.establishAccessToken();
-        JSONObject jsonObject = JSONObject.fromObject(json);
-        return JSONUtils.toString(client.deleteRecord(StringUtils.removeEnd(baseResourcePath, "/") + "/" + JSONUtils.getId(jsonObject) + "/"));
+    public SalesForceException(Throwable cause) {
+        super(cause);
     }
 
 }

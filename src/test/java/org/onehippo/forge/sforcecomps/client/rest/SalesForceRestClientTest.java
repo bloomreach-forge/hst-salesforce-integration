@@ -31,6 +31,7 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.onehippo.forge.sforcecomps.client.util.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -147,7 +148,7 @@ public class SalesForceRestClientTest {
         JSONObject json = JSONObject.fromObject("{ \"Name\": \"test\" } ");
         JSONObject jsonRet = (JSONObject) client.createRecord("/sobjects/Account", json);
         log.info("Created Objects: " + jsonRet);
-        String id = jsonRet.getString("id");
+        String id = JSONUtils.getId(jsonRet);
         
         client.updateRecord("/sobjects/Account/" + id + "/", JSONObject.fromObject("{ \"BillingCity\" : \"San Francisco\" }"));
         jsonRet = (JSONObject) client.getObjectsFromResourcePath("/sobjects/Account/" + id);

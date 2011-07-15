@@ -17,15 +17,17 @@ package org.onehippo.forge.sforcecomps.client.task;
 
 import java.io.IOException;
 
+import org.onehippo.forge.sforcecomps.client.util.JSONUtils;
+
 public class SalesForceRecordRetriever extends AbstractSalesForceTask {
 
     public String perform(String resourcePath) throws IOException {
         client.establishAccessToken();
         
         if (baseResourcePath != null) {
-            return client.getObjectsFromResourcePath(baseResourcePath + resourcePath).toString();
+            return JSONUtils.toString(client.getObjectsFromResourcePath(baseResourcePath + resourcePath));
         } else {
-            return client.getObjectsFromResourcePath(resourcePath).toString();
+            return JSONUtils.toString(client.getObjectsFromResourcePath(resourcePath));
         }
     }
 

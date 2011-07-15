@@ -15,6 +15,8 @@
  */
 package org.onehippo.forge.sforcecomps.client.rest;
 
+import org.onehippo.forge.sforcecomps.client.util.JSONUtils;
+
 import net.sf.json.JSONObject;
 
 
@@ -25,13 +27,15 @@ public class SalesForceAuthInfo {
     private String instanceUrl;
     private String signature;
     private String accessToken;
+    private long createdAt;
     
     public SalesForceAuthInfo(JSONObject json) {
-        this.id = json.getString("id");
+        this.id = JSONUtils.getId(json);
         this.issuedAt = json.getLong("issued_at");
         this.instanceUrl = json.getString("instance_url");
         this.signature = json.getString("signature");
         this.accessToken = json.getString("access_token");
+        this.createdAt = System.currentTimeMillis();
     }
     
     public String getId() {
@@ -54,4 +58,7 @@ public class SalesForceAuthInfo {
         return accessToken;
     }
     
+    public long getCreatedAt() {
+        return createdAt;
+    }
 }

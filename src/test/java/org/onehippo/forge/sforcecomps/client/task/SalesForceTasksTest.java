@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.onehippo.forge.sforcecomps.client.rest.SalesForceConnectionInfo;
 import org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient;
+import org.onehippo.forge.sforcecomps.client.util.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,7 +123,7 @@ public class SalesForceTasksTest {
         String ret = creator.perform(json);
         log.info("Created: " + ret);
         JSONObject jsonRet = JSONObject.fromObject(ret);
-        String id = jsonRet.getString("id");
+        String id = JSONUtils.getId(jsonRet);
         json = "{ \"id\": \"" + id + "\", \"BillingCity\" : \"San Francisco\" }";
         updater.perform(json);
         ret = retriever.perform("/" + id);

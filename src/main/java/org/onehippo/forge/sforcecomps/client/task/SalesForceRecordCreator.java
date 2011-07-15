@@ -19,6 +19,8 @@ import java.io.IOException;
 
 import net.sf.json.JSONObject;
 
+import org.onehippo.forge.sforcecomps.client.util.JSONUtils;
+
 public class SalesForceRecordCreator extends AbstractSalesForceTask {
 
     private boolean createOrUpdate;
@@ -35,9 +37,9 @@ public class SalesForceRecordCreator extends AbstractSalesForceTask {
         client.establishAccessToken();
         
         if (createOrUpdate) {
-            return client.createOrUpdateRecord(baseResourcePath, JSONObject.fromObject(json)).toString();
+            return JSONUtils.toString(client.createOrUpdateRecord(baseResourcePath, JSONObject.fromObject(json)));
         } else {
-            return client.createRecord(baseResourcePath, JSONObject.fromObject(json)).toString();
+            return JSONUtils.toString(client.createRecord(baseResourcePath, JSONObject.fromObject(json)));
         }
     }
 
