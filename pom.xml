@@ -17,7 +17,7 @@
   <name>SalesForce Integration Components</name>
   <groupId>org.onehippo.forge</groupId>
   <artifactId>sforce-comps</artifactId>
-  <version>0.01.02</version>
+  <version>0.01.03-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -84,9 +84,9 @@
   </developers>
   
   <scm>
-    <connection>scm:svn:https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/tags/sforce-comps-0.01.02</connection>
-    <developerConnection>scm:svn:https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/tags/sforce-comps-0.01.02</developerConnection>
-    <url>https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/tags/sforce-comps-0.01.02</url>
+    <connection>scm:svn:https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/trunk</connection>
+    <developerConnection>scm:svn:https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/trunk</developerConnection>
+    <url>https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/trunk</url>
   </scm>
 
   <issueManagement>
