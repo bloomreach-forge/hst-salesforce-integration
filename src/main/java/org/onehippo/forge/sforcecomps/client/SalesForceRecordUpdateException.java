@@ -15,7 +15,9 @@
  */
 package org.onehippo.forge.sforcecomps.client;
 
-public class SalesForceRecordUpdateException extends SalesForceRecordException {
+import net.sf.json.JSON;
+
+public class SalesForceRecordUpdateException extends SalesForceException {
     
     private static final long serialVersionUID = 1L;
 
@@ -23,16 +25,32 @@ public class SalesForceRecordUpdateException extends SalesForceRecordException {
         super();
     }
 
+    public SalesForceRecordUpdateException(JSON errors) {
+        super(errors);
+    }
+
     public SalesForceRecordUpdateException(String message) {
         super(message);
+    }
+
+    public SalesForceRecordUpdateException(String message, JSON errors) {
+        super(message, errors);
     }
 
     public SalesForceRecordUpdateException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    public SalesForceRecordUpdateException(String message, Throwable cause, JSON errors) {
+        super(message, cause, errors);
+    }
+
     public SalesForceRecordUpdateException(Throwable cause) {
         super(cause);
+    }
+
+    public SalesForceRecordUpdateException(Throwable cause, JSON errors) {
+        super(cause, errors);
     }
 
 }

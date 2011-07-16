@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.json.JSON;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
@@ -125,12 +126,13 @@ public class SalesForceRestClient {
             
             if (httpEntity != null) {
                 JSON json = JSONSerializer.toJSON(EntityUtils.toString(httpEntity));
+                JSONObject jsonRet = (json.isArray() ? ((JSONArray) json).getJSONObject(0) : (JSONObject) json);
                 
-                if (json.isArray() || !JSONUtils.containsId((JSONObject) json)) {
-                    throw new SalesForceSecurityException("Failed to establish access token: " + json);
+                if (!JSONUtils.containsId(jsonRet)) {
+                    throw new SalesForceSecurityException("Failed to establish auth token. " + SalesForceException.getFirstErrorMessage(json, ""), json);
                 }
                 
-                authInfo = new SalesForceAuthInfo((JSONObject) json);
+                authInfo = new SalesForceAuthInfo(jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -296,7 +298,7 @@ public class SalesForceRestClient {
             }
             
             if (status.getStatusCode() >= 400) {
-                throw new SalesForceRecordCreateException("Fail to create record: " + status.toString() + "\n" + jsonRet);
+                throw new SalesForceRecordCreateException("Fail to create record on " + StringUtils.substringAfter(resourcePath, "/sobjects/") + ". " + SalesForceException.getFirstErrorMessage(jsonRet, ""), jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -352,7 +354,7 @@ public class SalesForceRestClient {
             }
             
             if (status.getStatusCode() >= 400) {
-                throw new SalesForceRecordUpdateException("Fail to update record: " + status.toString() + "\n" + jsonRet);
+                throw new SalesForceRecordUpdateException("Fail to update record on " + StringUtils.substringAfter(resourcePath, "/sobjects/") + ". " + SalesForceException.getFirstErrorMessage(jsonRet, ""), jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -426,7 +428,7 @@ public class SalesForceRestClient {
             }
             
             if (status.getStatusCode() >= 400) {
-                throw new SalesForceRecordUpdateException("Fail to createOrUpdate record: " + status.toString() + "\n" + jsonRet);
+                throw new SalesForceRecordUpdateException("Fail to createOrUpdate record on " + StringUtils.substringAfter(resourcePath, "/sobjects/") + ". " + SalesForceException.getFirstErrorMessage(jsonRet, ""), jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -471,7 +473,7 @@ public class SalesForceRestClient {
             }
             
             if (status.getStatusCode() >= 400) {
-                throw new SalesForceRecordDeleteException("Fail to delete record: " + status.toString() + "\n" + jsonRet);
+                throw new SalesForceRecordDeleteException("Fail to delete record from " + StringUtils.substringAfter(resourcePath, "/sobjects/") + ". " + SalesForceException.getFirstErrorMessage(jsonRet, ""), jsonRet);
             }
         } finally {
             if (httpEntity != null) {
@@ -509,7 +511,16 @@ public class SalesForceRestClient {
             }
             
             if (status.getStatusCode() >= 400) {
-                throw new SalesForceRecordQueryException("Failed to retrieve from url: " + status.toString() + "\n" + jsonStr);
+                String resourcePath = null;
+                
+                if (StringUtils.contains(url, "/query/")) {
+                    resourcePath = StringUtils.substringAfter(url, "/query/");
+                } else {
+                    resourcePath = StringUtils.substringAfter(url, "/sobjects/");
+                }
+                
+                JSON jsonRet = JSONSerializer.toJSON(jsonStr);
+                throw new SalesForceRecordQueryException("Failed to retrieve record(s) from " + resourcePath + ". " + SalesForceException.getFirstErrorMessage(jsonRet, ""), jsonRet);
             }
         } finally {
             if (httpEntity != null) {
