@@ -19,11 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.json.JSON;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -47,6 +42,11 @@ import org.onehippo.forge.sforcecomps.client.SalesForceRecordQueryException;
 import org.onehippo.forge.sforcecomps.client.SalesForceRecordUpdateException;
 import org.onehippo.forge.sforcecomps.client.SalesForceSecurityException;
 import org.onehippo.forge.sforcecomps.client.util.JSONUtils;
+
+import net.sf.json.JSON;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 
 /**
  * Simple SalesForce REST API Wrapper using HTTP Client
@@ -163,6 +163,10 @@ public class SalesForceRestClient {
      * @see http://www.salesforce.com/us/developer/docs/api_rest/index.htm
      */
     public JSON getAvailableVersions() throws IOException {
+        if (autoEstablishAuthToken) {
+            establishAccessToken();
+        }
+
         return getJSONFromURL(getConnectionInfo().getBaseUrl() + StringUtils.removeEnd(getConnectionInfo().getBaseServicesDataPath(), "/") + "/");
     }
 
@@ -185,6 +189,10 @@ public class SalesForceRestClient {
      * @see http://www.salesforce.com/us/developer/docs/api_rest/index.htm
      */
     public JSON getAvailableResources() throws IOException {
+        if (autoEstablishAuthToken) {
+            establishAccessToken();
+        }
+
         return getJSONFromURL(getServiceBaseUrl());
     }
 
@@ -252,6 +260,10 @@ public class SalesForceRestClient {
      * @see http://www.salesforce.com/us/developer/docs/api_rest/index.htm
      */
     public JSON getObjectsFromResourcePath(String resourcePath) throws IOException {
+        if (autoEstablishAuthToken) {
+            establishAccessToken();
+        }
+
         return getJSONFromURL(StringUtils.removeEnd(getServiceBaseUrl(), "/") + StringUtils.removeEnd(resourcePath, "/"));
     }
     
@@ -489,10 +501,6 @@ public class SalesForceRestClient {
     }
     
     private String getJSONStringFromURL(String url) throws SalesForceException, IOException {
-        if (autoEstablishAuthToken) {
-            establishAccessToken();
-        }
-        
         String jsonStr = null;
         HttpRequestBase httpRequest = new HttpGet(url);
 
@@ -532,7 +540,7 @@ public class SalesForceRestClient {
     }
 
     private String getServiceBaseUrl() {
-        if (authInfo.getInstanceUrl() != null) {
+        if (authInfo != null && authInfo.getInstanceUrl() != null) {
             return authInfo.getInstanceUrl() + getConnectionInfo().getBaseServicesDataEnvPath();
         } else {
             return getConnectionInfo().getBaseUrl() + getConnectionInfo().getBaseServicesDataEnvPath();
@@ -540,7 +548,7 @@ public class SalesForceRestClient {
     }
     
     private void addHeaders(HttpRequestBase httpRequest) {
-        if (authInfo.getAccessToken() != null) {
+        if (authInfo != null && authInfo.getAccessToken() != null) {
             httpRequest.addHeader("Authorization", "OAuth " + authInfo.getAccessToken());
         }
         
