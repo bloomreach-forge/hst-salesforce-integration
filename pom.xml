@@ -82,27 +82,30 @@
       <timezone>+1</timezone>
     </developer>
   </developers>
-  
+
   <scm>
-    <connection>scm:svn:https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/trunk</connection>
-    <developerConnection>scm:svn:https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/trunk</developerConnection>
-    <url>https://forge.onehippo.org/svn/hst-salesforce/sforce-comps/trunk</url>
+    <connection>scm:git:git@github.com:onehippo-forge/hst-salesforce-integration.git</connection>
+    <developerConnection>scm:git:git@github.com:onehippo-forge/hst-salesforce-integration.git</developerConnection>
+    <url>https://github.com/onehippo-forge/hst-salesforce-integration.git</url>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
-    <url>http://forge.onehippo.org/projects/hst-salesforce</url>
+    <system>Jira</system>
+    <url>https://issues.onehippo.com/browse/HIPFORGE</url>
   </issueManagement>
 
   <ciManagement>
-    <system>Hudson</system>
-    <url>http://hudson.onehippo.org/job/Hippo%20Forge%20HST%20SalesForce%20Trunk/</url>
+    <system>Travis CI</system>
+    <url>https://travis-ci.org/onehippo-forge/hst-salesforce-integration</url>
   </ciManagement>
 
   <distributionManagement>
     <repository>
+      <name>Hippo Maven 2 Forge Repository</name>
+      <id>hippo-maven2-forge</id>
+      <url>https://maven.onehippo.com/content/repositories/forge-releases/</url>
       <uniqueVersion>false</uniqueVersion>
-      <id>hst-salesforce-maven-repo</id>
-      <url>svn:https://forge.onehippo.org/svn/hst-salesforce/maven2/</url>
     </repository>
   </distributionManagement>
 
