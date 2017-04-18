@@ -1,0 +1,449 @@
+<?xml version="1.0"?><!--
+    Copyright 2011 Hippo Licensed under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License. You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+    applicable law or agreed to in writing, software distributed under
+    the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+    OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and
+    limitations under the License.
+  --><!DOCTYPE document PUBLIC "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+  "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+  <properties>
+    <title>Using Task Components</title>
+  </properties>
+  <body>
+    <section name="Introduction">
+      <p>
+        When you have to integrate SalesForce in your Spring Application Context, Apache Camel Context, or something similar,
+        you will need simple POJO based task-executing components to achieve the integration.
+        The Task components explained here are to fulfill those requirements.
+        So, you can configure these components easily in your context configuration.
+      </p>
+      <p>
+        In this article, each Task Component configuration is configured as Spring Bean configuration
+        for easier understanding.
+      </p>
+      <p>
+        SalesForceClient component can be configured in Spring Beans Configuration like the following example:
+      </p>
+      <div class="brush: xml">
+      <source><![CDATA[
+  <bean id="salesForceConnectionInfo" class="org.onehippo.forge.sforcecomps.client.rest.SalesForceConnectionInfo">
+    <property name="clientId" value="3MVG9lKcPoNINVBJSoQsNCD.HHDdbugPsNXwwyFbgb47KWa_PTv" />
+    <property name="clientSecret" value="5678471853609579508" />
+    <property name="username" value="tester@onehippo.org" />
+    <property name="password" value="password" />
+    <property name="securityToken" value="hhWVl82SHphnA50OTBt2DAZk" />
+  </bean>
+  
+  <bean id="salesForceRestClient" 
+        class="org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient"
+        init-method="establishAccessToken">
+    <property name="connectionInfo" ref="salesForceConnectionInfo" />
+  </bean>
+      ]]></source>
+      </div>
+    </section>
+    <section name="SalesForceRecordCreator Task Component">
+      <subsection name="Properties for SalesForceRecordCreator Task Component">
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Example value</th>
+            <th>Default value</th>
+          </tr>
+          <tr>
+            <td>client</td>
+            <td>org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>baseResourcePath</td>
+            <td>java.lang.String</td>
+            <td>Base Resource Path where the record should exist under.</td>
+            <td>/sobjects/Account</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>createOrUpdate</td>
+            <td>boolean</td>
+            <td>
+              The flag whether 'createOrUpdate' option is used.
+              If this is true, the operation can update the existing record.
+              Otherwise, the operation will only create a record. 
+            </td>
+            <td>true</td>
+            <td>false</td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Execution Operation(s) for SalesForceRecordCreator Task Component">
+        <table>
+          <tr>
+            <th>Operation</th>
+            <th>Input Type(s)</th>
+            <th>Return Type(s)</th>
+            <th>Description</th>
+            <th>Example Input values</th>
+            <th>Example Output values</th>
+          </tr>
+          <tr>
+            <td>perform</td>
+            <td>java.lang.String</td>
+            <td>java.lang.String</td>
+            <td>
+              Perform record creation under the base resource path from a record string in JSON.
+              When successful, it returns a JSON string with ID and errors/success information.
+            </td>
+            <td>
+              {"Name":"test"}
+            </td>
+            <td>
+              {"id":"001E000000BCFtiIAH","errors":[],"success":true}
+            </td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Example Spring Configuration for SalesForceRecordCreator Task Component">
+        <div class="brush: xml">
+        <source><![CDATA[
+  <bean id="salesForceRecordCreator" class="org.onehippo.forge.sforcecomps.client.task.SalesForceRecordCreator">
+    <property name="client" ref="salesForceRestClient" />
+    <property name="baseResourcePath" value="/sobjects/Account" />
+    <property name="createOrUpdate" value="false" />
+  </bean>
+        ]]></source>
+        </div>
+      </subsection>
+      <subsection name="Example Camel Route Configuration for SalesForceRecordCreator Task Component">
+        <div class="brush: xml">
+        <source><![CDATA[
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+  xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <bean id="salesForceRecordCreator" class="org.onehippo.forge.sforcecomps.client.task.SalesForceRecordCreator">
+    <property name="client" ref="salesForceRestClient" />
+    <property name="baseResourcePath" value="/sobjects/Account" />
+    <property name="createOrUpdate" value="false" />
+  </bean>
+  
+  <camelContext xmlns="http://camel.apache.org/schema/spring">
+    
+    <route>
+      <!-- invoker is supposed to call this route URI with JSON string message. -->
+      <from uri="direct:test" />
+      <to uri="bean:salesForceRecordCreator" />
+    </route>
+    
+  </camelContext>
+
+</beans>
+        ]]></source>
+        </div>
+      </subsection>
+    </section>
+    <section name="SalesForceRecordRetriever Task Component">
+      <subsection name="Properties for SalesForceRecordRetriever Task Component">
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Example value</th>
+            <th>Default value</th>
+          </tr>
+          <tr>
+            <td>client</td>
+            <td>org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient</td>
+            <td>SalesForceRestClient object</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>baseResourcePath</td>
+            <td>java.lang.String</td>
+            <td>Base Resource Path which can be prepended to the input resource path on the operation.</td>
+            <td>/sobjects/Account</td>
+            <td></td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Execution Operation(s) for SalesForceRecordRetriever Task Component">
+        <table>
+          <tr>
+            <th>Operation</th>
+            <th>Input Type(s)</th>
+            <th>Return Type(s)</th>
+            <th>Description</th>
+            <th>Example Input values</th>
+            <th>Example Output values</th>
+          </tr>
+          <tr>
+            <td>perform</td>
+            <td>java.lang.String</td>
+            <td>java.lang.String</td>
+            <td>
+              Perform record creation under the base resource path from a record string in JSON.
+              When successful, it returns a JSON string containing the record.
+            </td>
+            <td>
+              /001E000000BCFtiIAH/
+            </td>
+            <td>
+              <div class="brush: js">
+              <source><![CDATA[
+              {"attributes":{"type":"Account","url":"/services/data/v20.0/sobjects/Account/001E000000BCFtiIAH"},
+              "Id":"001E000000BCFtiIAH","IsDeleted":false,"MasterRecordId":null,"Name":"test","Type":null,
+              "ParentId":null,"BillingStreet":null,"BillingCity":null,"BillingState":null,"BillingPostalCode":null,
+              "BillingCountry":null,"ShippingStreet":null,"ShippingCity":null,"ShippingState":null,
+              "ShippingPostalCode":null,"ShippingCountry":null,"Phone":null,"Fax":null,"AccountNumber":null,
+              "Website":null,"Sic":null,"Industry":null,"AnnualRevenue":null,"NumberOfEmployees":null,
+              "Ownership":null,"TickerSymbol":null,"Description":null,"Rating":null,"Site":null,
+              "OwnerId":"005E0000000Qei6IAC","CreatedDate":"2011-06-15T01:09:56.000+0000",
+              "CreatedById":"005E0000000Qei6IAC","LastModifiedDate":"2011-06-15T01:09:56.000+0000",
+              "LastModifiedById":"005E0000000Qei6IAC","SystemModstamp":"2011-06-15T01:09:56.000+0000",
+              "LastActivityDate":null,"CustomerPriority__c":null,"SLA__c":null,"Active__c":null,
+              "NumberofLocations__c":null,"UpsellOpportunity__c":null,"SLASerialNumber__c":null,
+              "SLAExpirationDate__c":null}
+              ]]></source>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Example Spring Configuration for SalesForceRecordRetriever Task Component">
+        <div class="brush: xml">
+        <source><![CDATA[
+  <bean id="salesForceRecordRetriever" class="org.onehippo.forge.sforcecomps.client.task.SalesForceRecordRetriever">
+    <property name="client" ref="salesForceRestClient" />
+    <property name="baseResourcePath" value="/sobjects/Account" />
+  </bean>
+        ]]></source>
+        </div>
+      </subsection>
+      <subsection name="Example Camel Route Configuration for SalesForceRecordRetriever Task Component">
+        <div class="brush: xml">
+        <source><![CDATA[
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+  xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <bean id="salesForceRecordRetriever" class="org.onehippo.forge.sforcecomps.client.task.SalesForceRecordRetriever">
+    <property name="client" ref="salesForceRestClient" />
+    <property name="baseResourcePath" value="/sobjects/Account" />
+  </bean>
+  
+  <camelContext xmlns="http://camel.apache.org/schema/spring">
+    
+    <route>
+      <!-- invoker is supposed to call this route URI with resource path string message. -->
+      <from uri="direct:test" />
+      <to uri="bean:salesForceRecordRetriever" />
+    </route>
+    
+  </camelContext>
+
+</beans>
+        ]]></source>
+        </div>
+      </subsection>
+    </section>
+    <section name="SalesForceRecordUpdater Task Component">
+      <subsection name="Properties for SalesForceRecordUpdater Task Component">
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Example value</th>
+            <th>Default value</th>
+          </tr>
+          <tr>
+            <td>client</td>
+            <td>org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient</td>
+            <td>SalesForceRestClient object</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>baseResourcePath</td>
+            <td>java.lang.String</td>
+            <td>Base Resource Path where the record exists under.</td>
+            <td>/sobjects/Account</td>
+            <td></td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Execution Operation(s) for SalesForceRecordUpdater Task Component">
+        <table>
+          <tr>
+            <th>Operation</th>
+            <th>Input Type(s)</th>
+            <th>Return Type(s)</th>
+            <th>Description</th>
+            <th>Example Input values</th>
+            <th>Example Output values</th>
+          </tr>
+          <tr>
+            <td>perform</td>
+            <td>java.lang.String</td>
+            <td>java.lang.String</td>
+            <td>
+              Perform record creation under the base resource path from a record string in JSON.
+              When successful, it returns the input JSON string.
+            </td>
+            <td>
+              {"id":"001E000000BCFtiIAH","BillingCity":"San Francisco"}
+            </td>
+            <td>
+              {"id":"001E000000BCFtiIAH","BillingCity":"San Francisco"}
+            </td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Example Spring Configuration for SalesForceRecordUpdater Task Component">
+        <div class="brush: xml">
+        <source><![CDATA[
+  <bean id="salesForceRecordUpdater" class="org.onehippo.forge.sforcecomps.client.task.SalesForceRecordUpdater">
+    <property name="client" ref="salesForceRestClient" />
+    <property name="baseResourcePath" value="/sobjects/Account" />
+  </bean>
+        ]]></source>
+        </div>
+      </subsection>
+      <subsection name="Example Camel Route Configuration for SalesForceRecordUpdater Task Component">
+        <div class="brush: xml">
+        <source><![CDATA[
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+  xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <bean id="salesForceRecordUpdater" class="org.onehippo.forge.sforcecomps.client.task.SalesForceRecordUpdater">
+    <property name="client" ref="salesForceRestClient" />
+    <property name="baseResourcePath" value="/sobjects/Account" />
+  </bean>
+  
+  <camelContext xmlns="http://camel.apache.org/schema/spring">
+    
+    <route>
+      <!-- invoker is supposed to call this route URI with JSON string message. -->
+      <from uri="direct:test" />
+      <to uri="bean:salesForceRecordUpdater" />
+    </route>
+    
+  </camelContext>
+
+</beans>
+        ]]></source>
+        </div>
+      </subsection>
+    </section>
+    <section name="SalesForceRecordDeleter Task Component">
+      <subsection name="Properties for SalesForceRecordDeleter Task Component">
+        <table>
+          <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Example value</th>
+            <th>Default value</th>
+          </tr>
+          <tr>
+            <td>client</td>
+            <td>org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient</td>
+            <td>SalesForceRestClient object</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>baseResourcePath</td>
+            <td>java.lang.String</td>
+            <td>Base Resource Path where the record exists under.</td>
+            <td>/sobjects/Account</td>
+            <td></td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Execution Operation(s) for SalesForceRecordDeleter Task Component">
+        <table>
+          <tr>
+            <th>Operation</th>
+            <th>Input Type(s)</th>
+            <th>Return Type(s)</th>
+            <th>Description</th>
+            <th>Example Input values</th>
+            <th>Example Output values</th>
+          </tr>
+          <tr>
+            <td>perform</td>
+            <td>java.lang.String</td>
+            <td>java.lang.String</td>
+            <td>
+              Perform record creation under the base resource path from a record string in JSON.
+              When successful, it returns the input JSON string.
+            </td>
+            <td>
+              {"id":"001E000000BCFtiIAH"}
+            </td>
+            <td>
+              {"id":"001E000000BCFtiIAH"}
+            </td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Example Spring Configuration for SalesForceRecordDeleter Task Component">
+        <div class="brush: xml">
+        <source><![CDATA[
+  <bean id="salesForceRecordDeleter" class="org.onehippo.forge.sforcecomps.client.task.SalesForceRecordDeleter">
+    <property name="client" ref="salesForceRestClient" />
+    <property name="baseResourcePath" value="/sobjects/Account" />
+  </bean>
+        ]]></source>
+        </div>
+      </subsection>
+      <subsection name="Example Camel Route Configuration for SalesForceRecordDeleter Task Component">
+        <div class="brush: xml">
+        <source><![CDATA[
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+  xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <bean id="salesForceRecordDeleter" class="org.onehippo.forge.sforcecomps.client.task.SalesForceRecordDeleter">
+    <property name="client" ref="salesForceRestClient" />
+    <property name="baseResourcePath" value="/sobjects/Account" />
+  </bean>
+  
+  <camelContext xmlns="http://camel.apache.org/schema/spring">
+    
+    <route>
+      <!-- invoker is supposed to call this route URI with JSON string message. -->
+      <from uri="direct:test" />
+      <to uri="bean:salesForceRecordDeleter" />
+    </route>
+    
+  </camelContext>
+
+</beans>
+        ]]></source>
+        </div>
+      </subsection>
+    </section>
+  </body>
+</document>

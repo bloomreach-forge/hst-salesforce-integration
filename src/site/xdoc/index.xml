@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+    Copyright 2010 Hippo Licensed under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License. You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+    applicable law or agreed to in writing, software distributed under
+    the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+    OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and
+    limitations under the License.
+  --><!DOCTYPE document PUBLIC "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+  "http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+  <properties>
+    <title>Introduction</title>
+  </properties>
+  <body>
+    <section name="Introduction">
+      <subsection name="What is SalesForce Integration Components?">
+        <p>
+          The SalesForce Integration Components provides POJO based components
+          which enables easy integration with SalesForce via REST API.
+        </p>
+        <p>
+          So, you can make use of these POJO based components in your application
+          in various ways.
+          For example, you can use those directly in your Java codes,
+          or you can take advantage of components assembly with Spring Framework,
+          Apache Camel, etc.
+        </p>
+      </subsection>
+      <subsection name="Component List">
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>FQN</th>
+          </tr>
+          <tr>
+            <td>SalesForceRestClient</td>
+            <td>A SalesForce REST Client API Wrapper class</td>
+            <td>org.onehippo.forge.sforcecomps.client.rest.SalesForceRestClient</td>
+          </tr>
+          <tr>
+            <td>SalesForceRestBrowser</td>
+            <td>
+              A Simple SalesForce REST Browser Client which can be used in Command-line.
+              You can run this browser with Maven command as well: $ mvn exec:java
+            </td>
+            <td>org.onehippo.forge.sforcecomps.client.rest.SalesForceRestBrowser</td>
+          </tr>
+          <tr>
+            <td>SalesForceRecordCreator</td>
+            <td>
+              SalesForce Record Creation Task Component.
+              This task component creates a record from a JSON string on a specified resource path.
+            </td>
+            <td>org.onehippo.forge.sforcecomps.client.task.SalesForceRecordCreator</td>
+          </tr>
+          <tr>
+            <td>SalesForceRecordRetriever</td>
+            <td>
+              SalesForce Record Retrieval Task Component.
+              This task component retrieves a record as JSON string on a specified resource path.
+            </td>
+            <td>org.onehippo.forge.sforcecomps.client.task.SalesForceRecordRetriever</td>
+          </tr>
+          <tr>
+            <td>SalesForceRecordUpdater</td>
+            <td>
+              SalesForce Record Updating Task Component.
+              This task component updates a record from a JSON string on a specified base resource path.
+              The input JSON string must contain "id" property. This task will generate the target resource path
+              by appending the ID property to the base resource path.
+            </td>
+            <td>org.onehippo.forge.sforcecomps.client.task.SalesForceRecordUpdater</td>
+          </tr>
+          <tr>
+            <td>SalesForceRecordDeleter</td>
+            <td>
+              SalesForce Record Deletion Task Component.
+              This task component deletes a record from a JSON string on a specified base resource path.
+              The input JSON string must contain "id" property. This task will generate the target resource path
+              by appending the ID property to the base resource path.
+            </td>
+            <td>org.onehippo.forge.sforcecomps.client.task.SalesForceRecordDeleter</td>
+          </tr>
+        </table>
+      </subsection>
+    </section>
+  </body>
+</document>
