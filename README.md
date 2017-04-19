@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/onehippo-forge/hst-salesforce-integration.svg?branch=develop)](https://travis-ci.org/onehippo-forge/hst-salesforce-integration)
 
 # HST SalesForce Integration Components
 
