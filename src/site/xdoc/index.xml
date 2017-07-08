@@ -17,6 +17,17 @@
   </properties>
   <body>
     <section name="Introduction">
+
+      <div class="alert alert-danger">
+        As of 2017-07-07, this project is retired. This site is kept online for archiving purposes for the time being.
+        Due to the lack of a developer community, the codebase was no longer actively maintained and
+        the integration APIs and usages were outdated too much.
+        The team therefore had no other choice but to retire this project.
+        If you are looking for an integration library for SalesForce REST API,
+        please consider the <a href="https://www.onehippo.org/12/library/concepts/crisp-api/introduction.html">CRISP</a>
+        API as an alternative.
+      </div>
+
       <subsection name="What is SalesForce Integration Components?">
         <p>
           The SalesForce Integration Components provides POJO based components
