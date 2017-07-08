@@ -1,5 +1,17 @@
 [![Build Status](https://travis-ci.org/onehippo-forge/hst-salesforce-integration.svg?branch=develop)](https://travis-ci.org/onehippo-forge/hst-salesforce-integration)
 
+# Retired Project!!!
+
+```
+As of 2017-07-07, this project is retired!
+This site is kept online for archiving purposes for the time being.
+Due to the lack of a developer community, the codebase was no longer actively maintained
+and the integration APIs and usages were outdated too much.
+The team therefore had no other choice but to retire this project.
+```
+
+If you are looking for an integration library for SalesForce REST API, please consider the [CRISP](https://www.onehippo.org/12/library/concepts/crisp-api/introduction.html) API as an alternative.
+
 # HST SalesForce Integration Components
 
 The SalesForce Integration Components provides POJO based components which enables easy integration with SalesForce via REST API.
