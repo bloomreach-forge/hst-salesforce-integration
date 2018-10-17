@@ -28,8 +28,8 @@
     <servlet-api.version>2.4</servlet-api.version>
     <hippo.hst.version>2.20.00</hippo.hst.version>
     
-    <httpcomponents-httpcore.version>4.1.1</httpcomponents-httpcore.version>
-    <httpcomponents-httpclient.version>4.1.1</httpcomponents-httpclient.version>
+    <httpcomponents-httpcore.version>4.3.3</httpcomponents-httpcore.version>
+    <httpcomponents-httpclient.version>4.3.6</httpcomponents-httpclient.version>
     <json-lib.version>2.4</json-lib.version>
     
     <lib.slf4j.version>1.6.1</lib.slf4j.version>
