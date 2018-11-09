@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pmd-cpd>
 <duplication lines="30" tokens="152">
-<file line="340" path="/Users/woonsanko/workspace/hst-salesforce-integration/src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestClient.java"/>
-<file line="414" path="/Users/woonsanko/workspace/hst-salesforce-integration/src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestClient.java"/>
+<file line="340" path="/home/machak/projects/plugins/hst-salesforce-integration/src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestClient.java"/>
+<file line="414" path="/home/machak/projects/plugins/hst-salesforce-integration/src/main/java/org/onehippo/forge/sforcecomps/client/rest/SalesForceRestClient.java"/>
 <codefragment>
 <![CDATA[
     public JSON createOrUpdateRecord(String resourcePath, JSON json) throws SalesForceException, IOException {
