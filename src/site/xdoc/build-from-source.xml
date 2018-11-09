@@ -22,7 +22,7 @@
     <section name="Building from source">
       <subsection name="Fork me on Github">
         <p>
-          Fork me on GitHub: <a href="https://github.com/onehippo-forge/hst-salesforce-integration" target="_blank">https://github.com/onehippo-forge/hst-salesforce-integration</a>.
+          Fork me on GitHub: <a href="https://github.com/bloomreach-forge/hst-salesforce-integration" target="_blank">https://github.com/bloomreach-forge/hst-salesforce-integration</a>.
         </p>
         <p>
           Build the project using Maven:

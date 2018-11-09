@@ -3,3 +3,6 @@
 /.settings
 /build.properties
 /target
+.idea/
+*.iml
+
